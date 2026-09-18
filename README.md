@@ -14,10 +14,8 @@
 
 ## 🕹️ Jogos Incluídos no Hub
 
-| Ícone | Jogo | Descrição | Status |
-| :---: | :--- | :--- | :---: |
 | 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação, recorde e pausa | 🟢 Jogável |
-| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos | 🔴 Preparando |
+| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos e recorde | 🟢 Jogável |
 | 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | 🔴 Preparando |
 | 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | 🔴 Preparando |
 | 🧊 | **Three.js** | Experiência interativa em 3D para Web/Mobile | 🔴 Preparando |
