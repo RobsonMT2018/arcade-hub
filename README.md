@@ -1,8 +1,8 @@
 # 🎮 Click Arcade Hub
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Status-Conclu%C3%ADdo-brightgreen?style=for-the-badge" alt="Status">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status">
+  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Tecnologias-HTML5%20%7C%20CSS3%20%7C%20JS-blue?style=for-the-badge" alt="Techs">
 </p>
 
@@ -16,49 +16,40 @@
 
 | Ícone | Jogo | Descrição | Status |
 | :---: | :--- | :--- | :---: |
-| 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação e pausa | 🟢 Jogável |
-| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos | 🟢 Jogável |
-| 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | 🟢 Jogável |
-| 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | 🟢 Jogável |
-| 🧊 | **Three.js** | Experiência interativa em 3D para Web/Mobile | 🟢 Demo 3D |
+| 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação, recorde e pausa | 🟢 Jogável |
+| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos | 🔴 Preparando |
+| 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | 🔴 Preparando |
+| 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | 🔴 Preparando |
+| 🧊 | **Three.js** | Experiência interativa em 3D para Web/Mobile | 🔴 Preparando |
 
 ---
 
-## 🛠️ Tecnologias Utilizadas
+## 📁 Estrutura do Projeto
 
-* **HTML5:** Estrutura semântica da aplicação.
-* **CSS3:** Estilização moderna responsiva, CSS Grid, Flexbox e efeitos hover.
-* **JavaScript (ES6+):** Lógica de navegação e redirecionamento para os projetos.
-* **GitHub Pages:** Hospedagem direta do portal.
-
----
-
-## 📂 Como Rodar o Projeto Localmente
-
-1. **Clona o repositório:**
-   ```bash
-   git clone [https://github.com/RobsonMT2018/arcade-hub.git](https://github.com/RobsonMT2018/arcade-hub.git)
-   ```
-
----
+```text
 arcade-hub/
-├── index.html            (A tua página principal do Click Jogos)
-├── README.md
-├── games/
-│   ├── snake/
-│   │   ├── index.html    (Tela/Canvas do Snake)
-│   │   ├── style.css
-│   │   └── snake.js
-│   ├── flappy/
-│   │   ├── index.html
-│   │   └── flappy.js
-│   ├── racing/
-│   │   ├── index.html
-│   │   └── racing.js
-│   ├── color-code/
-│   │   ├── index.html
-│   │   └── color.js
-│   └── threejs/
-│       ├── index.html
-│       └── main.js
----
+├── index.html              # Página principal do portal (Arcade Hub)
+├── style.css               # Estilos globais do hub
+├── script.js               # Lógica de navegação do hub
+├── README.md               # Documentação do projeto
+└── games/                  # Pasta contendo todos os jogos
+    ├── snake/              # Jogo da Cobrinha 🐍
+    │   ├── index.html
+    │   ├── style.css
+    │   └── script.js
+    ├── flappy-bird/        # Flappy Bird 🐤
+    │   ├── index.html
+    │   ├── style.css
+    │   └── script.js
+    ├── racing/             # Corridas 🏎️
+    │   ├── index.html
+    │   ├── style.css
+    │   └── script.js
+    ├── color-code/         # Color Code Game 🎨
+    │   ├── index.html
+    │   ├── style.css
+    │   └── script.js
+    └── threejs-demo/       # Experiência 3D 🧊
+        ├── index.html
+        ├── style.css
+        └── script.js
