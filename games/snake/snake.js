@@ -90,6 +90,8 @@ if (btnPause) {
 }
 
 function startGame() {
+  initAudio();
+  playClickSound();
   snake = [
     { x: 160, y: 200 },
     { x: 140, y: 200 },
@@ -135,6 +137,7 @@ function update() {
 
   // Comeu a comida
   if (head.x === food.x && head.y === food.y) {
+    playEatSound();
     score += 10;
     scoreEl.innerText = score;
 
@@ -181,6 +184,7 @@ function generateFood() {
 
 function togglePause() {
   if (isPaused) {
+    playClickSound();
     gameInterval = setInterval(gameLoop, 100);
     overlay.style.display = 'none';
     isPaused = false;
@@ -197,6 +201,7 @@ function togglePause() {
 function gameOver() {
   clearInterval(gameInterval);
   gameRunning = false;
+  playGameOverSound();
 
   overlayTitle.innerText = 'Game Over!';
   overlayTitle.style.color = '#ef4444';
