@@ -140,17 +140,64 @@ canvas {
   background-color: #16a34a;
   transform: scale(1.05);
 }
-
-/* --- Layout do D-Pad (Controle Estilizado em Grid 3x3) --- */
+/* --- Layout do D-Pad Ampliado para Celular --- */
 .touch-controls {
   display: grid;
-  grid-template-columns: repeat(3, 50px);
-  grid-template-rows: repeat(3, 45px);
-  gap: 6px;
+  grid-template-columns: repeat(3, 68px); /* Aumentado de 50px para 68px */
+  grid-template-rows: repeat(3, 60px);   /* Aumentado de 45px para 60px */
+  gap: 8px;
   justify-content: center;
   align-items: center;
-  margin-top: 0.8rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.5rem;
 }
+
+/* Posições corretas da Cruz Direcional */
+#btn-up { grid-column: 2; grid-row: 1; }
+#btn-left { grid-column: 1; grid-row: 2; }
+#btn-pause { grid-column: 2; grid-row: 2; }
+#btn-right { grid-column: 3; grid-row: 2; }
+#btn-down { grid-column: 2; grid-row: 3; }
+
+.dpad-btn {
+  width: 100%;
+  height: 100%;
+  background-color: #1e293b;
+  border: 2px solid #334155;
+  color: #ffffff;
+  font-size: 1.5rem; /* Ícones das setas bem maiores e visíveis */
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 4px 0 #0f172a, inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.08s ease;
+}
+
+/* Efeito ao Clicar / Tocar no Botão */
+.dpad-btn:active {
+  background-color: #22c55e;
+  border-color: #4ade80;
+  color: #000;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #0f172a, 0 0 12px rgba(34, 197, 94, 0.6);
+}
+
+.pause-btn {
+  background-color: #334155;
+  border-color: #475569;
+  font-size: 1.2rem;
+}
+
+.pause-btn:active {
+  background-color: #f59e0b;
+  border-color: #fbbf24;
+  box-shadow: 0 1px 0 #0f172a, 0 0 12px rgba(245, 158, 11, 0.6);
+}
+
+
 
 /* Posição dos botões no Grid 3x3 */
 #btn-up { grid-column: 2; grid-row: 1; }
