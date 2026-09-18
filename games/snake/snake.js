@@ -2,6 +2,7 @@ const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
 
 const scoreEl = document.getElementById('score');
+const speedEl = document.getElementById('speed');
 const highScoreEl = document.getElementById('high-score');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
@@ -15,12 +16,87 @@ let food = { x: 0, y: 0 };
 let dx = gridSize;
 let dy = 0;
 let score = 0;
+let applesEaten = 0;
+let speedLevel = 1;
+let currentIntervalMs = 120; // Tempo inicial por frame em milissegundos
 let highScore = localStorage.getItem('snake_highscore') || 0;
 let gameInterval = null;
 let isPaused = false;
 let gameRunning = false;
 
 highScoreEl.innerText = highScore;
+
+// --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new AudioCtx();
+  }
+}
+
+function playEatSound() {
+  initAudio();
+  if (!audioCtx) return;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+
+  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.1);
+}
+
+function playGameOverSound() {
+  initAudio();
+  if (!audioCtx) return;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = 'sawtooth';
+  osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+
+  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.4);
+}
+
+function playClickSound() {
+  initAudio();
+  if (!audioCtx) return;
+
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+
+  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 0.05);
+}
 
 // Teclado
 document.addEventListener('keydown', handleKeyPress);
@@ -40,7 +116,6 @@ function handleKeyPress(e) {
   else if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) moveRight();
 }
 
-// Funções de Movimentação (valida inversão de sentido)
 function moveUp() {
   if (dy === 0) { dx = 0; dy = -gridSize; }
 }
@@ -54,7 +129,6 @@ function moveRight() {
   if (dx === 0) { dx = gridSize; dy = 0; }
 }
 
-// Suporte a Eventos Touch nos Botões Virtuais
 function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
@@ -77,7 +151,6 @@ bindTouchButton('btn-down', moveDown);
 bindTouchButton('btn-left', moveLeft);
 bindTouchButton('btn-right', moveRight);
 
-// Botão de Pausa Touch
 const btnPause = document.getElementById('btn-pause');
 if (btnPause) {
   btnPause.addEventListener('touchstart', (e) => {
@@ -92,6 +165,7 @@ if (btnPause) {
 function startGame() {
   initAudio();
   playClickSound();
+
   snake = [
     { x: 160, y: 200 },
     { x: 140, y: 200 },
@@ -100,15 +174,24 @@ function startGame() {
   dx = gridSize;
   dy = 0;
   score = 0;
+  applesEaten = 0;
+  speedLevel = 1;
+  currentIntervalMs = 120;
+
   scoreEl.innerText = score;
+  speedEl.innerText = speedLevel;
   isPaused = false;
   gameRunning = true;
 
   overlay.style.display = 'none';
   generateFood();
 
+  resetGameLoop();
+}
+
+function resetGameLoop() {
   if (gameInterval) clearInterval(gameInterval);
-  gameInterval = setInterval(gameLoop, 100);
+  gameInterval = setInterval(gameLoop, currentIntervalMs);
 }
 
 function gameLoop() {
@@ -135,10 +218,24 @@ function update() {
 
   snake.unshift(head);
 
-  // Comeu a comida
+  // Comeu a maçã
   if (head.x === food.x && head.y === food.y) {
     playEatSound();
     score += 10;
+    applesEaten++;
+
+    // A cada 3 maçãs comidas, aumenta 1 na velocidade
+    if (applesEaten % 3 === 0) {
+      speedLevel++;
+      speedEl.innerText = speedLevel;
+
+      // Diminui o intervalo para acelerar o jogo (com um limite mínimo de 40ms)
+      if (currentIntervalMs > 40) {
+        currentIntervalMs -= 8;
+        resetGameLoop();
+      }
+    }
+
     scoreEl.innerText = score;
 
     if (score > highScore) {
@@ -157,7 +254,7 @@ function draw() {
   ctx.fillStyle = '#020617';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Comida
+  // Maçã
   ctx.fillStyle = '#ef4444';
   ctx.shadowColor = '#ef4444';
   ctx.shadowBlur = 8;
@@ -183,9 +280,9 @@ function generateFood() {
 }
 
 function togglePause() {
+  playClickSound();
   if (isPaused) {
-    playClickSound();
-    gameInterval = setInterval(gameLoop, 100);
+    resetGameLoop();
     overlay.style.display = 'none';
     isPaused = false;
   } else {
@@ -205,82 +302,6 @@ function gameOver() {
 
   overlayTitle.innerText = 'Game Over!';
   overlayTitle.style.color = '#ef4444';
-  overlayMsg.innerText = `Sua pontuação foi: ${score}`;
+  overlayMsg.innerText = `Pontuação: ${score} | Vel. Alcançada: ${speedLevel}`;
   overlay.style.display = 'flex';
 }
-
-// --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let audioCtx = null;
-
-function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new AudioCtx();
-  }
-}
-
-// Efeito 1: Comer Comida (Som 8-bit Agudo)
-function playEatSound() {
-  initAudio();
-  if (!audioCtx) return;
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.type = 'square'; // Som retro estilo Game Boy / NES
-  osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-
-  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.1);
-}
-
-// Efeito 2: Game Over (Som Grave Descendente)
-function playGameOverSound() {
-  initAudio();
-  if (!audioCtx) return;
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
-
-  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.4);
-}
-
-// Efeito 3: Clique / Pausa
-function playClickSound() {
-  initAudio();
-  if (!audioCtx) return;
-
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
-
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-
-  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
-
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.05);
-}
-
