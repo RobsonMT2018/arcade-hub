@@ -38,7 +38,7 @@
 1. **Clona o repositório:**
    ```bash
    git clone [https://github.com/RobsonMT2018/arcade-hub.git](https://github.com/RobsonMT2018/arcade-hub.git)
-
+   ```
 
 ---
 arcade-hub/
@@ -61,3 +61,4 @@ arcade-hub/
 │   └── threejs/
 │       ├── index.html
 │       └── main.js
+---
