@@ -38,3 +38,26 @@
 1. **Clona o repositório:**
    ```bash
    git clone [https://github.com/RobsonMT2018/arcade-hub.git](https://github.com/RobsonMT2018/arcade-hub.git)
+
+
+---
+arcade-hub/
+├── index.html            (A tua página principal do Click Jogos)
+├── README.md
+├── games/
+│   ├── snake/
+│   │   ├── index.html    (Tela/Canvas do Snake)
+│   │   ├── style.css
+│   │   └── snake.js
+│   ├── flappy/
+│   │   ├── index.html
+│   │   └── flappy.js
+│   ├── racing/
+│   │   ├── index.html
+│   │   └── racing.js
+│   ├── color-code/
+│   │   ├── index.html
+│   │   └── color.js
+│   └── threejs/
+│       ├── index.html
+│       └── main.js
