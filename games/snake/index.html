@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Snake Game | Arcade Hub</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -30,9 +30,23 @@
       </div>
     </div>
 
+    <!-- Controles Virtuais para Celular / Touch -->
+    <div class="touch-controls">
+      <div class="dpad-row">
+        <button class="dpad-btn" id="btn-up">⬆️</button>
+      </div>
+      <div class="dpad-row">
+        <button class="dpad-btn" id="btn-left">⬅️</button>
+        <button class="dpad-btn pause-btn" id="btn-pause">⏸️</button>
+        <button class="dpad-btn" id="btn-right">➡️</button>
+      </div>
+      <div class="dpad-row">
+        <button class="dpad-btn" id="btn-down">⬇️</button>
+      </div>
+    </div>
+
     <div class="controls-info">
-      <p>Controles: Use as <strong>Setas do Teclado</strong> ou <strong>WASD</strong></p>
-      <p>Pressione <strong>P</strong> ou <strong>Espaço</strong> para Pausar/Iniciar</p>
+      <p>Teclado: <strong>Setas</strong> / <strong>WASD</strong> | Pausa: <strong>Espaço</strong></p>
     </div>
   </div>
 
