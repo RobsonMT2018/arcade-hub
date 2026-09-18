@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snake Game | Arcade Hub</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="game-container">
+    <div class="header">
+      <a href="../../index.html" class="back-btn">⬅ Voltar ao Hub</a>
+      <h1>🐍 Snake Game</h1>
+    </div>
+
+    <div class="scoreboard">
+      <div>Pontos: <span id="score">0</span></div>
+      <div>Recorde: <span id="high-score">0</span></div>
+    </div>
+
+    <div class="canvas-wrapper">
+      <canvas id="snakeCanvas" width="400" height="400"></canvas>
+      
+      <!-- Overlay de Game Over / Start -->
+      <div id="overlay" class="overlay">
+        <h2 id="overlay-title">Cobrinha Clássica</h2>
+        <p id="overlay-msg">Pressione 'Espaço' ou clique abaixo para jogar</p>
+        <button id="start-btn" onclick="startGame()">Jogar</button>
+      </div>
+    </div>
+
+    <div class="controls-info">
+      <p>Controles: Use as <strong>Setas do Teclado</strong> ou <strong>WASD</strong></p>
+      <p>Pressione <strong>P</strong> ou <strong>Espaço</strong> para Pausar/Iniciar</p>
+    </div>
+  </div>
+
+  <script src="snake.js"></script>
+</body>
+</html>
