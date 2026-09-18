@@ -56,3 +56,7 @@ arcade-hub/
         ├── index.html
         ├── style.css
         └── script.js
+```
+<p align="center">
+  Desenvolvido por <strong>Robson Maciel Tomosique</strong> 🚀
+</p>
