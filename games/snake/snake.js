@@ -22,31 +22,71 @@ let gameRunning = false;
 
 highScoreEl.innerText = highScore;
 
-// Event Listeners para Teclado
+// Teclado
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(e) {
   if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
-    if (!gameRunning) {
-      startGame();
-    } else {
-      togglePause();
-    }
+    if (!gameRunning) startGame();
+    else togglePause();
     return;
   }
 
   if (!gameRunning || isPaused) return;
 
-  // Evita inverter a direção diretamente (ex: ir da direita para a esquerda de uma vez)
-  if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') && dy === 0) {
-    dx = 0; dy = -gridSize;
-  } else if ((e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') && dy === 0) {
-    dx = 0; dy = gridSize;
-  } else if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') && dx === 0) {
-    dx = -gridSize; dy = 0;
-  } else if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') && dx === 0) {
-    dx = gridSize; dy = 0;
-  }
+  if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W')) moveUp();
+  else if ((e.key === 'ArrowDown' || e.key === 's' || e.key === 'S')) moveDown();
+  else if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A')) moveLeft();
+  else if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) moveRight();
+}
+
+// Funções de Movimentação (valida inversão de sentido)
+function moveUp() {
+  if (dy === 0) { dx = 0; dy = -gridSize; }
+}
+function moveDown() {
+  if (dy === 0) { dx = 0; dy = gridSize; }
+}
+function moveLeft() {
+  if (dx === 0) { dx = -gridSize; dy = 0; }
+}
+function moveRight() {
+  if (dx === 0) { dx = gridSize; dy = 0; }
+}
+
+// Suporte a Eventos Touch nos Botões Virtuais
+function bindTouchButton(id, action) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+
+  const handler = (e) => {
+    e.preventDefault();
+    if (!gameRunning) {
+      startGame();
+      return;
+    }
+    if (!isPaused) action();
+  };
+
+  btn.addEventListener('touchstart', handler, { passive: false });
+  btn.addEventListener('click', handler);
+}
+
+bindTouchButton('btn-up', moveUp);
+bindTouchButton('btn-down', moveDown);
+bindTouchButton('btn-left', moveLeft);
+bindTouchButton('btn-right', moveRight);
+
+// Botão de Pausa Touch
+const btnPause = document.getElementById('btn-pause');
+if (btnPause) {
+  btnPause.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    if (gameRunning) togglePause();
+  }, { passive: false });
+  btnPause.addEventListener('click', () => {
+    if (gameRunning) togglePause();
+  });
 }
 
 function startGame() {
@@ -111,18 +151,17 @@ function update() {
 }
 
 function draw() {
-  // Limpar Canvas
   ctx.fillStyle = '#020617';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Desenhar Comida
+  // Comida
   ctx.fillStyle = '#ef4444';
   ctx.shadowColor = '#ef4444';
-  ctx.shadowBlur = 10;
+  ctx.shadowBlur = 8;
   ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
-  ctx.shadowBlur = 0; // Reset sombra
+  ctx.shadowBlur = 0;
 
-  // Desenhar Cobrinha
+  // Cobra
   snake.forEach((part, index) => {
     ctx.fillStyle = index === 0 ? '#22c55e' : '#4ade80';
     ctx.fillRect(part.x, part.y, gridSize - 2, gridSize - 2);
@@ -133,7 +172,6 @@ function generateFood() {
   food.x = Math.floor(Math.random() * tileCount) * gridSize;
   food.y = Math.floor(Math.random() * tileCount) * gridSize;
 
-  // Garante que a comida não apareça em cima da cobrinha
   snake.forEach(part => {
     if (part.x === food.x && part.y === food.y) {
       generateFood();
@@ -150,7 +188,7 @@ function togglePause() {
     clearInterval(gameInterval);
     overlayTitle.innerText = 'Pausado';
     overlayTitle.style.color = '#f59e0b';
-    overlayMsg.innerText = 'Pressione Espaço para Continuar';
+    overlayMsg.innerText = 'Toque na tela ou Espaço para Continuar';
     overlay.style.display = 'flex';
     isPaused = true;
   }
