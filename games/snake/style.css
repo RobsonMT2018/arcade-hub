@@ -12,6 +12,8 @@
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none; /* Evita seleção acidental de texto no celular ao tocar rápido */
+  -webkit-user-select: none;
 }
 
 body {
@@ -21,18 +23,19 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 10px;
 }
 
 .game-container {
   background-color: var(--card-bg);
-  padding: 1.5rem;
+  padding: 1.2rem;
   border-radius: 12px;
   border: 1px solid var(--border-color);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 450px;
+  max-width: 440px;
   width: 100%;
 }
 
@@ -41,18 +44,18 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
 }
 
 .header h1 {
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   color: var(--accent-color);
 }
 
 .back-btn {
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border: 1px solid var(--border-color);
   padding: 4px 8px;
   border-radius: 6px;
@@ -69,18 +72,19 @@ body {
   display: flex;
   justify-content: space-between;
   background-color: #0f172a;
-  padding: 0.75rem 1rem;
+  padding: 0.6rem 1rem;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
   border: 1px solid var(--border-color);
 }
 
 .canvas-wrapper {
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 1 / 1;
 }
 
 canvas {
@@ -88,6 +92,8 @@ canvas {
   border: 2px solid var(--border-color);
   border-radius: 8px;
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .overlay {
@@ -96,7 +102,7 @@ canvas {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.88);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -107,17 +113,18 @@ canvas {
 }
 
 .overlay h2 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   color: #ef4444;
   margin-bottom: 0.5rem;
 }
 
 .overlay p {
   color: var(--text-muted);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
+  font-size: 0.9rem;
 }
 
-button {
+#start-btn {
   background-color: var(--accent-color);
   color: #000;
   border: none;
@@ -129,14 +136,56 @@ button {
   transition: transform 0.1s, background 0.2s;
 }
 
-button:hover {
+#start-btn:hover {
   background-color: #16a34a;
   transform: scale(1.05);
 }
 
-.controls-info {
+/* --- Controles Touch (D-Pad) --- */
+.touch-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 1rem;
-  font-size: 0.85rem;
+  gap: 6px;
+  width: 100%;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.dpad-btn {
+  width: 58px;
+  height: 52px;
+  background-color: #0f172a;
+  border: 2px solid var(--border-color);
+  color: #fff;
+  font-size: 1.3rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.1s, transform 0.1s;
+}
+
+.dpad-btn:active {
+  background-color: var(--accent-color);
+  transform: scale(0.92);
+}
+
+.pause-btn {
+  background-color: #334155;
+  font-size: 1rem;
+}
+
+.controls-info {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
   color: var(--text-muted);
   text-align: center;
 }
