@@ -11,14 +11,19 @@
 🚀 **[CLIQUE AQUI PARA ABRIR O ARCADE HUB NO NAVEGADOR](https://RobsonMT2018.github.io/arcade-hub/)**
 
 ---
-
 ## 🕹️ Jogos Incluídos no Hub
 
-| 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação, recorde e pausa | 🟢 Jogável 
-| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos e recorde | 🟢 Jogável 
-| 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | 🔴 Preparando 
-| 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | 🔴 Preparando 
-| 🧊 | **Three.js** | Experiência interativa em 3D para Web/Mobile | 🔴 Preparando 
+<div align="center">
+
+| Ícone | Jogo | Descrição | Status | Acesso |
+| :---: | :--- | :--- | :---: | :---: |
+| 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação, recorde e pausa | ![Jogável](https://img.shields.io/badge/Status-Jog%C3%A1vel-brightgreen?style=flat-square) | [🎮 Jogar](./games/snake/index.html) |
+| 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos e recorde | ![Jogável](https://img.shields.io/badge/Status-Jog%C3%A1vel-brightgreen?style=flat-square) | [🎮 Jogar](./games/flappy/index.html) |
+| 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | ![Em Breve](https://img.shields.io/badge/Status-Em%20Breve-orange?style=flat-square) | ⏳ |
+| 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | ![Em Breve](https://img.shields.io/badge/Status-Em%20Breve-orange?style=flat-square) | ⏳ |
+| 🧊 | **Three.js** | Experiência interativa em 3D para Web/Mobile | ![Em Breve](https://img.shields.io/badge/Status-Em%20Breve-orange?style=flat-square) | ⏳ |
+
+</div>
 
 ---
 
