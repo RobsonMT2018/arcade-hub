@@ -28,9 +28,9 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Corpo do Console */
+/* Corpo do Console - Roxo Cyberpunk */
 .gameboy-device {
-  background: linear-gradient(145deg, #fa0015 0%, #b80512 70%, #80000a 100%);
+  background: linear-gradient(145deg, #a044ff 0%, #8a2be2 70%, #5b11a6 100%);
   width: min(92vw, 520px);
   max-width: 520px;
   border-radius: 28px 28px 45px 45px;
@@ -45,6 +45,7 @@ body {
   align-items: center;
   position: relative;
 }
+
 
 /* Cabeçalho do Console */
 .console-header {
