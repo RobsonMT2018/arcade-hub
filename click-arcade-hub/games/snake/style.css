@@ -8,11 +8,25 @@
   --btn-border: #334155;
   --yellow-accent: #facc15;
 
-/* Altera apenas estes valores para mudar o tema do console */
-  --console-color-light: #a044ff;
-  --console-color-main: #8a2be2;
-  --console-color-dark: #5b11a6;
+/* OPÇÃO A - Roxo Cyberpunk */
+  --device-grad-start: #a044ff;
+  --device-grad-mid: #8a2be2;
+  --device-grad-end: #5b11a6;
+
+  /* OPÇÃO B - Cinza Retro Game Boy (Para ativar, descarte a de cima e descomente abaixo)
+  --device-grad-start: #e5e7eb;
+  --device-grad-mid: #d1d5db;
+  --device-grad-end: #9ca3af; 
+  */
+
+  /* OPÇÃO C - Laranja Sunset (Para ativar, descarte a de cima e descomente abaixo)
+  --device-grad-start: #ffb067;
+  --device-grad-mid: #ff9f43;
+  --device-grad-end: #cc6a10; 
+  */
+
 }
+
 
 * {
   box-sizing: border-box;
@@ -33,9 +47,11 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Estilo cor do console */
+
+
+/* Corpo do Console */
 .gameboy-device {
-  background: linear-gradient(145deg, --console-color-light 0%, --console-color-main 70%, --console-color-dark 100%);
+  background: linear-gradient(145deg, var(--device-grad-start) 0%, var(--device-grad-mid) 70%, var(--device-grad-end) 100%);
   width: min(92vw, 520px);
   max-width: 520px;
   border-radius: 28px 28px 45px 45px;
