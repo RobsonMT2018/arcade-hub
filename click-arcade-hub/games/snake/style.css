@@ -32,8 +32,8 @@ body {
 .gameboy-device {
   background: linear-gradient(145deg, #fa0015 0%, #b80512 70%, #80000a 100%);
   width: 100%;
-  max-width: 580px;
-  height: 950px;
+  max-width: 50vh;
+  max-height: 100vh;
   border-radius: 28px 28px 45px 45px;
   padding: 20px 18px 30px 18px;
   box-shadow: 
@@ -245,7 +245,7 @@ canvas {
 /* D-Pad Direcional em Cruz */
 .dpad-container {
   display: grid;
-  grid-template-columns: repeat(3, 80px);
+  grid-template-columns: repeat(3, 90px);
   grid-template-rows: repeat(3,80px);
   gap: 0;
 }
@@ -253,7 +253,7 @@ canvas {
 .dpad-btn {
   background-color: var(--btn-dark);
   border: 1px solid var(--btn-border);
-  color: #f0eaea;
+  color: #b9b3b3;
   font-size: 2.5rem;
   display: flex;
   align-items: center;
@@ -267,35 +267,38 @@ canvas {
 .dpad-up {
   grid-column: 2;
   grid-row: 1;
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px;
   border-bottom: none;
+  width: 70%;
+  margin-left: 10px;
 }
 
 .dpad-left {
+  margin-top: 10px;
+  margin-right: 10px;
   grid-column: 1;
   grid-row: 2;
-  border-radius: 8px 0 0 8px;
+  border-radius: 8px;
   border-right: none;
-}
-
-.dpad-center {
-  grid-column: 2;
-  grid-row: 2;
-  background-color: #b80512;
-  border: 1px solid #80000a;
+  height: 70%;
 }
 
 .dpad-right {
+  margin-top: 10px;
+  margin-left: 10px;
   grid-column: 3;
   grid-row: 2;
-  border-radius: 0 8px 8px 0;
+  border-radius: 8px;
   border-left: none;
+  height: 70%;
 }
 
 .dpad-down {
+  width: 70%;
+  margin-left: 10px;
   grid-column: 2;
   grid-row: 3;
-  border-radius: 0 0 8px 8px;
+  border-radius: 8px;
   border-top: none;
 }
 
