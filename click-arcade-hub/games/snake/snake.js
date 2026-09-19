@@ -46,6 +46,30 @@ function initAudio() {
   }
 }
 
+function playSoundMove() {
+  if (!initAudio()) return;
+  
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch (error) {
+    audioCtx = null;
+  }
+}
+
 function playEatSound() {
   if (!initAudio()) return;
 
@@ -285,6 +309,7 @@ function update() {
     }
   }
 
+  playSoundMove();
   snake.unshift(head);
 
   // Comeu a maçã
