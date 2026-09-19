@@ -7,7 +7,8 @@ const highScoreEl = document.getElementById('high-score');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayMsg = document.getElementById('overlay-msg');
-const btnStart = document.getElementById('btn-start');
+const btnStart = document.getElementById('start-btn');
+const btnPlay = document.getElementById('btn-play');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -26,13 +27,6 @@ let isPaused = false;
 let gameRunning = false;
 
 highScoreEl.innerText = highScore;
-
-if (btnStart) {
-  btnStart.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (!gameRunning) startGame();
-  });
-}
 
 // --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -110,19 +104,17 @@ function playClickSound() {
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(e) {
-  if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
-    if (!gameRunning) togglePause();
-    else togglePause();
-    return;
-  }
-
-  // Tecla Espaço: Inicia se estiver parado ou alterna Pausa se estiver a rodar
   if (e.key === ' ') {
     if (!gameRunning) {
       startGame();
     } else {
       togglePause();
     }
+    return;
+  }
+
+  if (e.key === 'p' || e.key === 'P') {
+    if (gameRunning) togglePause();
     return;
   }
 
@@ -152,17 +144,10 @@ function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
 
-  const handler = (e) => {
+  btn.addEventListener('click', (e) => {
     e.preventDefault();
-    if (gameRunning && !isPaused) {
-      startGame();
-      return;
-    }
-    if (!isPaused) action();
-  };
-
-  btn.addEventListener('touchstart', handler, { passive: false });
-  btn.addEventListener('click', handler);
+    if (gameRunning && !isPaused) action();
+  });
 }
 
 bindTouchButton('btn-up', moveUp);
@@ -172,25 +157,20 @@ bindTouchButton('btn-right', moveRight);
 
 const btnPause = document.getElementById('btn-pause');
 if (btnPause) {
-  const handlePause = (e) => {
+  btnPause.addEventListener('click', (e) => {
     e.preventDefault();
     if (gameRunning) togglePause();
-  };
-  btnPause.addEventListener('touchstart', handlePause, { passive: false });
-  btnPause.addEventListener('click', handlePause);
+  });
 }
 
 // Botão Play (Apenas este reinicia o jogo)
-const btnPlay = document.getElementById('btn-play');
 if (btnPlay) {
-  const handlePlay = (e) => {
+  btnPlay.addEventListener('click', (e) => {
     e.preventDefault();
     if (!gameRunning || isPaused) {
       startGame();
     }
-  };
-  btnPlay.addEventListener('touchstart', handlePlay, { passive: false });
-  btnPlay.addEventListener('click', handlePlay);
+  });
 }
 
 function startGame() {
@@ -213,7 +193,6 @@ function startGame() {
   speedEl.innerText = speedLevel;
   isPaused = false;
   gameRunning = true;
-  if (btnStart) btnStart.style.visibility = 'hidden';
 
   overlay.style.display = 'none';
   generateFood();
@@ -335,9 +314,7 @@ function gameOver() {
   overlayTitle.style.color = '#ef4444';
   overlayMsg.innerText = `Sua pontuação final foi: ${score}`;
   
-  const startBtn = document.getElementById('start-btn');
-  if (startBtn) startBtn.innerText = 'Jogar Novamente';
-  if (btnStart) btnStart.style.visibility = 'visible';
+  if (btnStart) btnStart.innerText = 'Jogar Novamente';
 
   overlay.style.display = 'flex';
 }
