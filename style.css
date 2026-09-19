@@ -255,7 +255,7 @@
 
 /* Conteúdo abaixo da Imagem */
 .game-content {
-  padding: 16px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
