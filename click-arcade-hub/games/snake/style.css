@@ -1,33 +1,11 @@
 :root {
   --bg-color: #080c14;
- 
   --bezel-bg: #111622;
   --bezel-border: #1a2233;
   --screen-bg: #030712;
   --btn-dark: #1e293b;
   --btn-border: #334155;
   --yellow-accent: #facc15;
-
-/* OPÇÃO A - Roxo Cyberpunk
-  --device-grad-start: #a044ff;
-  --device-grad-mid: #8a2be2;
-  --device-grad-end: #5b11a6;
-*/
-
-
-/* OPÇÃO B - Cinza Retro Game Boy*/
-
-  --device-grad-start: #e5e7eb;
-  --device-grad-mid: #d1d5db;
-  --device-grad-end: #9ca3af; 
- 
-
-/* OPÇÃO C - Laranja Sunset
-  --device-grad-start: #ffb067;
-  --device-grad-mid: #ff9f43;
-  --device-grad-end: #cc6a10; 
-*/
-
 }
 
 
@@ -51,10 +29,8 @@ body {
 }
 
 
-
-/* Corpo do Console */
+/* Gradiente Padrão/Base da estrutura */
 .gameboy-device {
-  background: linear-gradient(145deg, var(--device-grad-start) 0%, var(--device-grad-mid) 70%, var(--device-grad-end) 100%);
   width: min(92vw, 520px);
   max-width: 520px;
   border-radius: 28px 28px 45px 45px;
@@ -68,6 +44,23 @@ body {
   flex-direction: column;
   align-items: center;
   position: relative;
+}
+
+/* Temas de Cores */
+.gameboy-device.theme-red {
+  background: linear-gradient(145deg, #fa0015 0%, #b80512 70%, #80000a 100%);
+}
+
+.gameboy-device.theme-purple {
+  background: linear-gradient(145deg, #a044ff 0%, #8a2be2 70%, #5b11a6 100%);
+}
+
+.gameboy-device.theme-gray {
+  background: linear-gradient(145deg, #e5e7eb 0%, #d1d5db 70%, #9ca3af 100%);
+}
+
+.gameboy-device.theme-orange {
+  background: linear-gradient(145deg, #ffb067 0%, #ff9f43 70%, #cc6a10 100%);
 }
 
 
