@@ -18,7 +18,7 @@ let dx = gridSize;
 let dy = 0;
 let score = 0;
 let applesEaten = 0;
-let speedLevel = 1;
+let speedLevel = 0;
 let currentIntervalMs = 120; // Tempo por frame em ms
 let highScore = localStorage.getItem('snake_highscore') || 0;
 let gameInterval = null;
@@ -256,8 +256,8 @@ function update() {
     score += 10;
     applesEaten++;
 
-    // A cada 3 maçãs comidas, aumenta a velocidade
-    if (applesEaten % 3 === 0) {
+    // A cada 10 maçãs comidas, aumenta a velocidade
+    if (applesEaten % 10 === 0) {
       speedLevel++;
       speedEl.innerText = speedLevel;
 
