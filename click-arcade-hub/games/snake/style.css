@@ -1,17 +1,12 @@
 :root {
-  --bg-color: #0b0f19;
+  --bg-color: #080c14;
   --gameboy-red: #d10818;
-  --gameboy-red-dark: #91020d;
   --bezel-bg: #111622;
   --bezel-border: #1a2233;
   --screen-bg: #030712;
-  --snake-green: #22c55e;
-  --snake-head: #10b981;
-  --food-red: #ef4444;
-  --text-gold: #38bdf8;
-  --btn-bg: #1e293b;
+  --btn-dark: #1e293b;
   --btn-border: #334155;
-  --btn-active: #0f172a;
+  --yellow-accent: #facc15;
 }
 
 * {
@@ -33,13 +28,13 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Corpo do Game Boy Vermelho */
+/* Corpo do Console */
 .gameboy-device {
   background: linear-gradient(145deg, #e6091b 0%, #b80512 70%, #80000a 100%);
   width: 100%;
   max-width: 420px;
   border-radius: 28px 28px 45px 45px;
-  padding: 24px 20px 28px 20px;
+  padding: 20px 18px 30px 18px;
   box-shadow: 
     0 20px 40px rgba(0, 0, 0, 0.8),
     inset 0 2px 4px rgba(255, 255, 255, 0.3),
@@ -48,6 +43,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 }
 
 /* Cabeçalho do Console */
@@ -56,46 +52,65 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
-  padding: 0 8px;
+  margin-bottom: 12px;
+  padding: 0 4px;
 }
 
 .power-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .power-led {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   background-color: #22c55e;
   border-radius: 50%;
   box-shadow: 0 0 8px #22c55e, inset 0 1px 2px rgba(255, 255, 255, 0.8);
-  display: inline-block;
 }
 
 .power-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: #ffffff;
+}
+
+/* Botão Central "Voltar ao Hub" inserido no Topo */
+.back-hub-btn {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  padding: 6px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.back-hub-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.console-title {
   font-family: 'Press Start 2P', monospace;
   font-size: 0.65rem;
   color: #ffffff;
   letter-spacing: 1px;
 }
 
-.console-title {
-  font-family: 'Press Start 2P', monospace;
-  font-size: 0.8rem;
-  color: #ffffff;
-  letter-spacing: 1.5px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-/* Moldura Interna (Bezel da Tela) */
+/* Moldura Interna da Tela */
 .screen-bezel {
   background-color: var(--bezel-bg);
   width: 100%;
   border-radius: 16px;
-  padding: 14px;
+  padding: 12px;
   border: 3px solid var(--bezel-border);
   box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.8);
   display: flex;
@@ -119,9 +134,9 @@ body {
 
 .scoreboard div:nth-child(1) span { color: #22c55e; }
 .scoreboard div:nth-child(2) span { color: #38bdf8; }
-.scoreboard div:nth-child(3) span { color: #facc15; }
+.scoreboard div:nth-child(3) span { color: var(--yellow-accent); }
 
-/* Wrapper da Tela/Canvas */
+/* Canvas e Overlay */
 .canvas-wrapper {
   position: relative;
   width: 100%;
@@ -130,7 +145,6 @@ body {
   border-radius: 8px;
   overflow: hidden;
   border: 2px solid #000000;
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
 }
 
 canvas {
@@ -139,21 +153,19 @@ canvas {
   height: 100%;
 }
 
-/* Overlay de Menu / Game Over */
 .overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(3, 7, 18, 0.92);
+  background: rgba(3, 7, 18, 0.94);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 16px;
-  backdrop-filter: blur(2px);
 }
 
 .overlay h2 {
@@ -161,7 +173,6 @@ canvas {
   font-size: 1.1rem;
   color: #ef4444;
   margin-bottom: 12px;
-  line-height: 1.4;
 }
 
 .overlay p {
@@ -174,44 +185,72 @@ canvas {
   background-color: #22c55e;
   color: #030712;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 18px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   border-radius: 8px;
   cursor: pointer;
   box-shadow: 0 4px 0 #15803d;
-  transition: transform 0.1s, background 0.2s;
-}
-
-#start-btn:hover {
-  background-color: #4ade80;
 }
 
 #start-btn:active {
-  transform: translateY(3px);
-  box-shadow: 0 1px 0 #15803d;
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #15803d;
 }
 
-/* Área de Controles */
-.controls-section {
+/* Layout Inferior dos Controles (Pause - DPad - Play) */
+.controls-layout {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 26px;
-  padding: 0 10px 10px 10px;
+  margin-top: 24px;
+  padding: 0 10px;
 }
 
-/* D-Pad em Cruz */
+.side-btn-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+}
+
+/* Botões de Ação (Pause e Play) */
+.action-btn {
+  width: 52px;
+  height: 44px;
+  background-color: var(--btn-dark);
+  border: 2px solid var(--btn-border);
+  border-radius: 10px;
+  color: var(--yellow-accent);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 6px rgba(0, 0, 0, 0.4);
+  transition: transform 0.08s;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+.play-btn {
+  color: var(--yellow-accent);
+}
+
+/* D-Pad Direcional em Cruz */
 .dpad-container {
   display: grid;
-  grid-template-columns: repeat(3, 44px);
-  grid-template-rows: repeat(3, 44px);
+  grid-template-columns: repeat(3, 46px);
+  grid-template-rows: repeat(3, 46px);
   gap: 0;
 }
 
 .dpad-btn {
-  background-color: var(--btn-bg);
+  background-color: var(--btn-dark);
   border: 2px solid var(--btn-border);
   color: #ffffff;
   font-size: 1.2rem;
@@ -221,7 +260,6 @@ canvas {
   cursor: pointer;
   touch-action: manipulation;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 6px rgba(0, 0, 0, 0.4);
-  transition: background-color 0.08s, transform 0.08s;
 }
 
 .dpad-up {
@@ -260,60 +298,6 @@ canvas {
 }
 
 .dpad-btn:active {
-  background-color: var(--btn-active);
   transform: scale(0.95);
-}
-
-/* Botão de Pausa Quadrado */
-.pause-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pause-btn {
-  width: 52px;
-  height: 52px;
-  background-color: var(--btn-bg);
-  border: 2px solid var(--btn-border);
-  border-radius: 10px;
-  color: #facc15;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  touch-action: manipulation;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 6px rgba(0, 0, 0, 0.4);
-  transition: background-color 0.08s, transform 0.08s;
-}
-
-.pause-btn:active {
-  background-color: var(--btn-active);
-  transform: scale(0.95);
-}
-
-/* Link para voltar ao Hub */
-.hub-link-wrapper {
-  margin-top: 16px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-.back-btn {
-  color: rgba(255, 255, 255, 0.85);
-  text-decoration: none;
-  font-size: 0.75rem;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 6px 14px;
-  border-radius: 12px;
-  transition: all 0.2s;
-}
-
-.back-btn:hover {
-  background: rgba(0, 0, 0, 0.5);
-  color: #ffffff;
-  border-color: #ffffff;
+  background-color: #0f172a;
 }

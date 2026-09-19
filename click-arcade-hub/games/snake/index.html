@@ -4,27 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Snake Game | Arcade Hub</title>
+  <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="./style.css" />
 </head>
 <body>
 
-   
   <!-- Console Game Boy Vermelho -->
   <div class="gameboy-device">
     
-    <!-- Cabeçalho do Console -->
+    <!-- Cabeçalho do Console com Voltar ao Hub Centralizado -->
     <div class="console-header">
       <div class="power-indicator">
         <span class="power-led"></span>
         <span class="power-label">POWER</span>
       </div>
+
+      <a href="../../index.html" class="back-hub-btn">
+        <span>⁥-</span> Voltar ao Hub
+      </a>
+
       <div class="console-title">SNAKE GAME</div>
     </div>
 
-    <!-- Moldura da Tela Bezel -->
+    <!-- Moldura Interna da Tela -->
     <div class="screen-bezel">
       
       <!-- Placar do Jogo -->
@@ -40,17 +44,22 @@
         
         <!-- Overlay de Game Over / Start -->
         <div id="overlay" class="overlay">
-          <h2 id="overlay-title">Cobrinha Clássica</h2>
-          <p id="overlay-msg">Pressione 'Espaço' ou clique abaixo para jogar</p>
-          <button id="start-btn" onclick="startGame()">Jogar</button>
+          <h2 id="overlay-title">Fim de Jogo</h2>
+          <p id="overlay-msg">Sua pontuação final foi: <span id="final-score">0</span></p>
+          <button id="start-btn" onclick="startGame()">Jogar Novamente</button>
         </div>
       </div>
     </div>
 
-    <!-- Seção dos Controles Virtuais -->
-    <div class="controls-section">
+    <!-- Seção Inferior de Controles -->
+    <div class="controls-layout">
       
-      <!-- D-Pad em Cruz Direcional com Centro Vermelho -->
+      <!-- Botão Pause (Esquerda) -->
+      <div class="side-btn-wrapper left">
+        <button class="action-btn" id="btn-pause" aria-label="Pausa">⏸</button>
+      </div>
+
+      <!-- D-Pad Direcional Centralizado -->
       <div class="dpad-container">
         <button class="dpad-btn dpad-up" id="btn-up" aria-label="Cima">↑</button>
         <button class="dpad-btn dpad-left" id="btn-left" aria-label="Esquerda">←</button>
@@ -59,16 +68,11 @@
         <button class="dpad-btn dpad-down" id="btn-down" aria-label="Baixo">↓</button>
       </div>
 
-      <!-- Botão de Pause do Lado Direito -->
-      <div class="pause-container">
-        <button class="pause-btn" id="btn-pause" aria-label="Pausa">⏸</button>
+      <!-- Botão Play (Direita) -->
+      <div class="side-btn-wrapper right">
+        <button class="action-btn play-btn" id="btn-play" onclick="startGame()" aria-label="Jogar">▶</button>
       </div>
 
-    </div>
-
-    <!-- Link para Voltar ao Hub -->
-    <div class="hub-link-wrapper">
-      <a href="../../index.html" class="back-btn">⬅ Voltar ao Hub</a>
     </div>
 
   </div>

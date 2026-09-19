@@ -7,6 +7,7 @@ const highScoreEl = document.getElementById('high-score');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayMsg = document.getElementById('overlay-msg');
+const btnStart = document.getElementById('btn-start');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -25,6 +26,13 @@ let isPaused = false;
 let gameRunning = false;
 
 highScoreEl.innerText = highScore;
+
+if (btnStart) {
+  btnStart.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (!gameRunning) startGame();
+  });
+}
 
 // --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -181,6 +189,7 @@ function startGame() {
   speedEl.innerText = speedLevel;
   isPaused = false;
   gameRunning = true;
+  if (btnStart) btnStart.style.visibility = 'hidden';
 
   overlay.style.display = 'none';
   generateFood();
@@ -304,6 +313,7 @@ function gameOver() {
   
   const startBtn = document.getElementById('start-btn');
   if (startBtn) startBtn.innerText = 'Jogar Novamente';
+  if (btnStart) btnStart.style.visibility = 'visible';
 
   overlay.style.display = 'flex';
 }
