@@ -25,6 +25,7 @@ let highScore = localStorage.getItem('snake_highscore') || 0;
 let gameInterval = null;
 let isPaused = false;
 let gameRunning = false;
+let directionChangedThisTick = false;
 
 highScoreEl.innerText = highScore;
 
@@ -128,23 +129,39 @@ function handleKeyPress(e) {
 }
 
 function moveUp() {
-  if (dy === 0) { dx = 0; dy = -gridSize; }
+  if (dy === 0 && !directionChangedThisTick) {
+    dx = 0;
+    dy = -gridSize;
+    directionChangedThisTick = true;
+  }
 }
 function moveDown() {
-  if (dy === 0) { dx = 0; dy = gridSize; }
+  if (dy === 0 && !directionChangedThisTick) {
+    dx = 0;
+    dy = gridSize;
+    directionChangedThisTick = true;
+  }
 }
 function moveLeft() {
-  if (dx === 0) { dx = -gridSize; dy = 0; }
+  if (dx === 0 && !directionChangedThisTick) {
+    dx = -gridSize;
+    dy = 0;
+    directionChangedThisTick = true;
+  }
 }
 function moveRight() {
-  if (dx === 0) { dx = gridSize; dy = 0; }
+  if (dx === 0 && !directionChangedThisTick) {
+    dx = gridSize;
+    dy = 0;
+    directionChangedThisTick = true;
+  }
 }
 
 function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
 
-  btn.addEventListener('click', (e) => {
+  btn.addEventListener('pointerdown', (e) => {
     e.preventDefault();
     if (gameRunning && !isPaused) action();
   });
@@ -193,6 +210,7 @@ function startGame() {
   speedEl.innerText = speedLevel;
   isPaused = false;
   gameRunning = true;
+  directionChangedThisTick = false;
 
   overlay.style.display = 'none';
   generateFood();
@@ -211,6 +229,7 @@ function gameLoop() {
 }
 
 function update() {
+  directionChangedThisTick = false;
   const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
   // Colisão com as paredes
