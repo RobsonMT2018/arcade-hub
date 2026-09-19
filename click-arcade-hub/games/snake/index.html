@@ -5,44 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Snake Game | Arcade Hub</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div class="game-container">
-    <div class="header">
-      <a href="../../index.html" class="back-btn">⬅ Voltar ao Hub</a>
-      <h1>🐍 Snake Game</h1>
+  <!-- Console Game Boy Vermelho -->
+  <div class="gameboy-device">
+    
+    <!-- Cabeçalho do Console -->
+    <div class="console-header">
+      <div class="power-indicator">
+        <span class="power-led"></span>
+        <span class="power-label">POWER</span>
+      </div>
+      <div class="console-title">SNAKE GAME</div>
     </div>
 
-    <div class="scoreboard">
-      <div>Pontos: <span id="score">0</span></div>
-      <div>Speed: <span id="speed">1</span></div>
-      <div>Recorde: <span id="high-score">0</span></div>
-    </div>
-
-    <div class="canvas-wrapper">
-      <canvas id="snakeCanvas" width="400" height="400"></canvas>
+    <!-- Moldura da Tela Bezel -->
+    <div class="screen-bezel">
       
-      <!-- Overlay de Game Over / Start -->
-      <div id="overlay" class="overlay">
-        <h2 id="overlay-title">Cobrinha Clássica</h2>
-        <p id="overlay-msg">Pressione 'Espaço' ou clique abaixo para jogar</p>
-        <button id="start-btn" onclick="startGame()">Jogar</button>
+      <!-- Placar do Jogo -->
+      <div class="scoreboard">
+        <div>Pontos: <span id="score">0</span></div>
+        <div>Speed: <span id="speed">1</span></div>
+        <div>Recorde: <span id="high-score">0</span></div>
+      </div>
+
+      <!-- Canvas do Jogo -->
+      <div class="canvas-wrapper">
+        <canvas id="snakeCanvas" width="400" height="400"></canvas>
+        
+        <!-- Overlay de Game Over / Start -->
+        <div id="overlay" class="overlay">
+          <h2 id="overlay-title">Cobrinha Clássica</h2>
+          <p id="overlay-msg">Pressione 'Espaço' ou clique abaixo para jogar</p>
+          <button id="start-btn" onclick="startGame()">Jogar</button>
+        </div>
       </div>
     </div>
 
-    <!-- Controles Virtuais para Celular / Touch -->
-    <div class="touch-controls">
-      <button class="dpad-btn" id="btn-up">⬆️</button>
-      <button class="dpad-btn" id="btn-left">⬅️</button>
-      <button class="dpad-btn pause-btn" id="btn-pause">⏸️</button>
-      <button class="dpad-btn" id="btn-right">➡️</button>
-      <button class="dpad-btn" id="btn-down">⬇️</button>
+    <!-- Seção dos Controles Virtuais -->
+    <div class="controls-section">
+      
+      <!-- D-Pad em Cruz Direcional com Centro Vermelho -->
+      <div class="dpad-container">
+        <button class="dpad-btn dpad-up" id="btn-up" aria-label="Cima">↑</button>
+        <button class="dpad-btn dpad-left" id="btn-left" aria-label="Esquerda">←</button>
+        <div class="dpad-center"></div>
+        <button class="dpad-btn dpad-right" id="btn-right" aria-label="Direita">→</button>
+        <button class="dpad-btn dpad-down" id="btn-down" aria-label="Baixo">↓</button>
+      </div>
+
+      <!-- Botão de Pause do Lado Direito -->
+      <div class="pause-container">
+        <button class="pause-btn" id="btn-pause" aria-label="Pausa">⏸</button>
+      </div>
+
     </div>
 
-    <div class="controls-info">
-      <p>Teclado: <strong>Setas</strong> / <strong>WASD</strong> | Pausa: <strong>Espaço</strong></p>
+    <!-- Link para Voltar ao Hub -->
+    <div class="hub-link-wrapper">
+      <a href="../../../index.html" class="back-btn">⬅ Voltar ao Hub</a>
     </div>
+
   </div>
 
   <script src="snake.js"></script>

@@ -18,7 +18,7 @@ let dy = 0;
 let score = 0;
 let applesEaten = 0;
 let speedLevel = 1;
-let currentIntervalMs = 120; // Tempo inicial por frame em milissegundos
+let currentIntervalMs = 120; // Tempo por frame em ms
 let highScore = localStorage.getItem('snake_highscore') || 0;
 let gameInterval = null;
 let isPaused = false;
@@ -153,13 +153,12 @@ bindTouchButton('btn-right', moveRight);
 
 const btnPause = document.getElementById('btn-pause');
 if (btnPause) {
-  btnPause.addEventListener('touchstart', (e) => {
+  const handlePause = (e) => {
     e.preventDefault();
     if (gameRunning) togglePause();
-  }, { passive: false });
-  btnPause.addEventListener('click', () => {
-    if (gameRunning) togglePause();
-  });
+  };
+  btnPause.addEventListener('touchstart', handlePause, { passive: false });
+  btnPause.addEventListener('click', handlePause);
 }
 
 function startGame() {
@@ -224,12 +223,11 @@ function update() {
     score += 10;
     applesEaten++;
 
-    // A cada 3 maçãs comidas, aumenta 1 na velocidade
+    // A cada 3 maçãs comidas, aumenta a velocidade
     if (applesEaten % 3 === 0) {
       speedLevel++;
       speedEl.innerText = speedLevel;
 
-      // Diminui o intervalo para acelerar o jogo (com um limite mínimo de 40ms)
       if (currentIntervalMs > 40) {
         currentIntervalMs -= 8;
         resetGameLoop();
@@ -251,7 +249,7 @@ function update() {
 }
 
 function draw() {
-  ctx.fillStyle = '#020617';
+  ctx.fillStyle = '#030712';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Maçã
@@ -263,7 +261,7 @@ function draw() {
 
   // Cobra
   snake.forEach((part, index) => {
-    ctx.fillStyle = index === 0 ? '#22c55e' : '#4ade80';
+    ctx.fillStyle = index === 0 ? '#10b981' : '#22c55e';
     ctx.fillRect(part.x, part.y, gridSize - 2, gridSize - 2);
   });
 }
@@ -288,7 +286,7 @@ function togglePause() {
   } else {
     clearInterval(gameInterval);
     overlayTitle.innerText = 'Pausado';
-    overlayTitle.style.color = '#f59e0b';
+    overlayTitle.style.color = '#facc15';
     overlayMsg.innerText = 'Toque na tela ou Espaço para Continuar';
     overlay.style.display = 'flex';
     isPaused = true;
@@ -300,8 +298,12 @@ function gameOver() {
   gameRunning = false;
   playGameOverSound();
 
-  overlayTitle.innerText = 'Game Over!';
+  overlayTitle.innerText = 'Fim de Jogo';
   overlayTitle.style.color = '#ef4444';
-  overlayMsg.innerText = `Pontuação: ${score} | Vel. Alcançada: ${speedLevel}`;
+  overlayMsg.innerText = `Sua pontuação final foi: ${score}`;
+  
+  const startBtn = document.getElementById('start-btn');
+  if (startBtn) startBtn.innerText = 'Jogar Novamente';
+
   overlay.style.display = 'flex';
 }
