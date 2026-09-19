@@ -111,17 +111,28 @@ document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(e) {
   if (e.key === ' ' || e.key === 'p' || e.key === 'P') {
-    if (!gameRunning) startGame();
+    if (!gameRunning) togglePause();
     else togglePause();
     return;
   }
 
+  // Tecla Espaço: Inicia se estiver parado ou alterna Pausa se estiver a rodar
+  if (e.key === ' ') {
+    if (!gameRunning) {
+      startGame();
+    } else {
+      togglePause();
+    }
+    return;
+  }
+
+ // Se o jogo não estiver a rodar ou estiver pausado, ignora as setas direcionais
   if (!gameRunning || isPaused) return;
 
-  if ((e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W')) moveUp();
-  else if ((e.key === 'ArrowDown' || e.key === 's' || e.key === 'S')) moveDown();
-  else if ((e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A')) moveLeft();
-  else if ((e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D')) moveRight();
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') moveUp();
+  else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') moveDown();
+  else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveLeft();
+  else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveRight();
 }
 
 function moveUp() {
@@ -143,10 +154,8 @@ function bindTouchButton(id, action) {
 
   const handler = (e) => {
     e.preventDefault();
-    if (!gameRunning) {
-      if (id === 'btn-up' || id === 'btn-down' || id === 'btn-left' || id === 'btn-right') {
-        startGame();
-      }
+    if (gameRunning && !isPaused) {
+      startGame();
       return;
     }
     if (!isPaused) action();
@@ -169,6 +178,19 @@ if (btnPause) {
   };
   btnPause.addEventListener('touchstart', handlePause, { passive: false });
   btnPause.addEventListener('click', handlePause);
+}
+
+// Botão Play (Apenas este reinicia o jogo)
+const btnPlay = document.getElementById('btn-play');
+if (btnPlay) {
+  const handlePlay = (e) => {
+    e.preventDefault();
+    if (!gameRunning || isPaused) {
+      startGame();
+    }
+  };
+  btnPlay.addEventListener('touchstart', handlePlay, { passive: false });
+  btnPlay.addEventListener('click', handlePlay);
 }
 
 function startGame() {
