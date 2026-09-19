@@ -19,7 +19,7 @@ let dy = 0;
 let score = 0;
 let applesEaten = 0;
 let speedLevel = 0;
-let currentIntervalMs = 120; // Tempo por frame em ms
+let currentIntervalMs = 240; // Tempo por frame em ms
 let highScore = localStorage.getItem('snake_highscore') || 0;
 let gameInterval = null;
 let isPaused = false;
@@ -207,7 +207,7 @@ function startGame() {
   score = 0;
   applesEaten = 0;
   speedLevel = 1;
-  currentIntervalMs = 120;
+  currentIntervalMs = 240;
 
   scoreEl.innerText = score;
   speedEl.innerText = speedLevel;
