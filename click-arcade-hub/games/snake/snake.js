@@ -34,71 +34,87 @@ const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
 function initAudio() {
-  if (!audioCtx) {
-    audioCtx = new AudioCtx();
+  if (!AudioCtx) return false;
+
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return true;
+  } catch (error) {
+    audioCtx = null;
+    return false;
   }
 }
 
 function playEatSound() {
-  initAudio();
-  if (!audioCtx) return;
+  if (!initAudio()) return;
 
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
-  osc.type = 'square';
-  osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
 
-  gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
 
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.1);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+  } catch (error) {
+    audioCtx = null;
+  }
 }
 
 function playGameOverSound() {
-  initAudio();
-  if (!audioCtx) return;
+  if (!initAudio()) return;
 
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
-  osc.type = 'sawtooth';
-  osc.frequency.setValueAtTime(220, audioCtx.currentTime);
-  osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
 
-  gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
 
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.4);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.4);
+  } catch (error) {
+    audioCtx = null;
+  }
 }
 
 function playClickSound() {
-  initAudio();
-  if (!audioCtx) return;
+  if (!initAudio()) return;
 
-  const osc = audioCtx.createOscillator();
-  const gain = audioCtx.createGain();
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
 
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
 
-  gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
 
-  osc.connect(gain);
-  gain.connect(audioCtx.destination);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
 
-  osc.start();
-  osc.stop(audioCtx.currentTime + 0.05);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch (error) {
+    audioCtx = null;
+  }
 }
 
 // Teclado
@@ -161,18 +177,18 @@ function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
 
-  let lastTouchTime = 0;
-  const handleTouch = (e) => {
+  let lastPointerTime = 0;
+  const handlePointer = (e) => {
     e.preventDefault();
-    lastTouchTime = Date.now();
+    lastPointerTime = Date.now();
     if (gameRunning && !isPaused) action();
   };
   const handleClick = (e) => {
     e.preventDefault();
-    if (Date.now() - lastTouchTime > 500 && gameRunning && !isPaused) action();
+    if (Date.now() - lastPointerTime > 500 && gameRunning && !isPaused) action();
   };
 
-  btn.addEventListener('touchstart', handleTouch, { passive: false });
+  btn.addEventListener('pointerdown', handlePointer, { passive: false });
   btn.addEventListener('click', handleClick);
 }
 
@@ -183,33 +199,33 @@ bindTouchButton('btn-right', moveRight);
 
 const btnPause = document.getElementById('btn-pause');
 if (btnPause) {
-  let lastPauseTouchTime = 0;
+  let lastPausePointerTime = 0;
   const handlePause = (e) => {
     e.preventDefault();
-    lastPauseTouchTime = Date.now();
+    lastPausePointerTime = Date.now();
     if (gameRunning) togglePause();
   };
-  btnPause.addEventListener('touchstart', handlePause, { passive: false });
+  btnPause.addEventListener('pointerdown', handlePause, { passive: false });
   btnPause.addEventListener('click', (e) => {
     e.preventDefault();
-    if (Date.now() - lastPauseTouchTime > 500 && gameRunning) togglePause();
+    if (Date.now() - lastPausePointerTime > 500 && gameRunning) togglePause();
   });
 }
 
 // Botão Play (Apenas este reinicia o jogo)
 if (btnPlay) {
-  let lastPlayTouchTime = 0;
+  let lastPlayPointerTime = 0;
   const handlePlay = (e) => {
     e.preventDefault();
-    lastPlayTouchTime = Date.now();
+    lastPlayPointerTime = Date.now();
     if (!gameRunning || isPaused) {
       startGame();
     }
   };
   
-  btnPlay.addEventListener('touchstart', handlePlay, { passive: false });
+  btnPlay.addEventListener('pointerdown', handlePlay, { passive: false });
   btnPlay.addEventListener('click', (e) => {
-    if (Date.now() - lastPlayTouchTime > 500) handlePlay(e);
+    if (Date.now() - lastPlayPointerTime > 500) handlePlay(e);
   });
 }
 
