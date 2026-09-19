@@ -163,3 +163,118 @@
       border-top: 1px solid var(--border-color);
       margin-top: 3rem;
     }
+
+
+    /* ===================================================
+   1. ANIMAÇÃO DO JOYSTICK NO CABEÇALHO
+   =================================================== */
+.header-logo-icon {
+  display: inline-block;
+  font-size: 2.2rem;
+  color: #ff9800; /* Cor de destaque (laranja) */
+  animation: floatJoystick 3s ease-in-out infinite, pulseGlow 2s infinite alternate;
+  transform-origin: center;
+}
+
+/* Efeito de flutuação suave e leve rotação */
+@keyframes floatJoystick {
+  0% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-6px) rotate(-5deg);
+  }
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+}
+
+/* Efeito de brilho pulsante */
+@keyframes pulseGlow {
+  from {
+    filter: drop-shadow(0 0 2px rgba(255, 152, 0, 0.4));
+  }
+  to {
+    filter: drop-shadow(0 0 10px rgba(255, 152, 0, 0.9));
+  }
+}
+
+/* ===================================================
+   2. GALERIA E CARDS COM IMAGENS (THUMBNAILS)
+   =================================================== */
+.game-card {
+  background-color: #161b26;
+  border: 1px solid #2a3245;
+  border-radius: 12px;
+  overflow: hidden; /* Garante que a imagem não saia da borda arredondada */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-card:hover {
+  transform: translateY(-5deg);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Recipiente da Imagem do Jogo */
+.game-thumb-container {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  background-color: #0f131d;
+}
+
+.game-thumb-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ajusta a imagem sem distorcer */
+  transition: transform 0.4s ease;
+}
+
+/* Efeito Zoom na Imagem ao passar o mouse */
+.game-card:hover .game-thumb-container img {
+  transform: scale(1.08);
+}
+
+/* Badge/Tag de Categoria sobreposta à imagem */
+.game-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(18, 22, 32, 0.85);
+  border: 1px solid #ff9800;
+  color: #ff9800;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+/* Conteúdo abaixo da Imagem */
+.game-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.game-title {
+  color: #fff;
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+}
+
+.game-description {
+  color: #a0aec0;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+  flex-grow: 1;
+}
+
+.game-actions {
+  display: flex;
+  gap: 10px;
+}
