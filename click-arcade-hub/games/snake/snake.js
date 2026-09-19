@@ -181,13 +181,18 @@ if (btnPause) {
 }
 
 // Botão Play (Apenas este reinicia o jogo)
+const btnPlay = document.getElementById('btn-play');
+
 if (btnPlay) {
-  btnPlay.addEventListener('click', (e) => {
+  const handlePlay = (e) => {
     e.preventDefault();
     if (!gameRunning || isPaused) {
       startGame();
     }
-  });
+  };
+  
+  btnPlay.addEventListener('touchstart', handlePlay, { passive: false });
+  btnPlay.addEventListener('click', handlePlay);
 }
 
 function startGame() {
