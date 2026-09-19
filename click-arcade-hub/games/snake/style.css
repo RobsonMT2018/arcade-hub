@@ -13,11 +13,13 @@
   --device-grad-mid: #8a2be2;
   --device-grad-end: #5b11a6;
 
-  /* OPÇÃO B - Cinza Retro Game Boy (Para ativar, descarte a de cima e descomente abaixo)
+/* OPÇÃO B - Cinza Retro Game Boy (Para ativar, descarte a de cima e descomente abaixo)
   --device-grad-start: #e5e7eb;
   --device-grad-mid: #d1d5db;
   --device-grad-end: #9ca3af; 
-  */
+ 
+ */
+
 
   /* OPÇÃO C - Laranja Sunset (Para ativar, descarte a de cima e descomente abaixo)
   --device-grad-start: #ffb067;
