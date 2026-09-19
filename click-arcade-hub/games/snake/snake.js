@@ -161,10 +161,19 @@ function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
 
-  btn.addEventListener('pointerdown', (e) => {
+  let lastTouchTime = 0;
+  const handleTouch = (e) => {
     e.preventDefault();
+    lastTouchTime = Date.now();
     if (gameRunning && !isPaused) action();
-  });
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (Date.now() - lastTouchTime > 500 && gameRunning && !isPaused) action();
+  };
+
+  btn.addEventListener('touchstart', handleTouch, { passive: false });
+  btn.addEventListener('click', handleClick);
 }
 
 bindTouchButton('btn-up', moveUp);
@@ -174,23 +183,34 @@ bindTouchButton('btn-right', moveRight);
 
 const btnPause = document.getElementById('btn-pause');
 if (btnPause) {
+  let lastPauseTouchTime = 0;
+  const handlePause = (e) => {
+    e.preventDefault();
+    lastPauseTouchTime = Date.now();
+    if (gameRunning) togglePause();
+  };
+  btnPause.addEventListener('touchstart', handlePause, { passive: false });
   btnPause.addEventListener('click', (e) => {
     e.preventDefault();
-    if (gameRunning) togglePause();
+    if (Date.now() - lastPauseTouchTime > 500 && gameRunning) togglePause();
   });
 }
 
 // Botão Play (Apenas este reinicia o jogo)
 if (btnPlay) {
+  let lastPlayTouchTime = 0;
   const handlePlay = (e) => {
     e.preventDefault();
+    lastPlayTouchTime = Date.now();
     if (!gameRunning || isPaused) {
       startGame();
     }
   };
   
   btnPlay.addEventListener('touchstart', handlePlay, { passive: false });
-  btnPlay.addEventListener('click', handlePlay);
+  btnPlay.addEventListener('click', (e) => {
+    if (Date.now() - lastPlayTouchTime > 500) handlePlay(e);
+  });
 }
 
 function startGame() {
