@@ -144,7 +144,9 @@ function bindTouchButton(id, action) {
   const handler = (e) => {
     e.preventDefault();
     if (!gameRunning) {
-      startGame();
+      if (id === 'btn-up' || id === 'btn-down' || id === 'btn-left' || id === 'btn-right') {
+        startGame();
+      }
       return;
     }
     if (!isPaused) action();
