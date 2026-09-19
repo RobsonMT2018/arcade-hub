@@ -7,6 +7,11 @@
   --btn-dark: #1e293b;
   --btn-border: #334155;
   --yellow-accent: #facc15;
+
+/* Altera apenas estes valores para mudar o tema do console */
+  --console-color-light: #a044ff;
+  --console-color-main: #8a2be2;
+  --console-color-dark: #5b11a6;
 }
 
 * {
