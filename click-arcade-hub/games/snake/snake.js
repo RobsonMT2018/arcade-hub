@@ -181,8 +181,6 @@ if (btnPause) {
 }
 
 // Botão Play (Apenas este reinicia o jogo)
-const btnPlay = document.getElementById('btn-play');
-
 if (btnPlay) {
   const handlePlay = (e) => {
     e.preventDefault();
