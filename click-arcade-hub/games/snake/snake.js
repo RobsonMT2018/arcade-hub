@@ -397,7 +397,7 @@ function gameOver() {
   overlayTitle.style.color = '#ef4444';
   overlayMsg.innerText = `Sua pontuação final foi: ${score}`;
   
-  if (btnStart) btnStart.innerText = 'Jogar Novamente';
+  if (btnStart) btnStart.innerText = '▶';
 
   overlay.style.display = 'flex';
 }
