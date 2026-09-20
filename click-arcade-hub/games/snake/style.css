@@ -123,8 +123,8 @@ body {
 
 .console-title {
   font-family: 'Press Start 2P', monospace;
-  font-size: clamp(0.52rem, 1.3vw, 0.7rem);
-  color: #ffffff;
+  font-size: 1rem;
+  color: #b39e2ae5;
   letter-spacing: 1px;
   text-align: center;
   justify-self: end;
@@ -148,9 +148,9 @@ body {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  gap: 8px;
+  gap: 10px;
   background-color: rgba(124, 124, 124, 0.438);
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 8px;
   font-weight: bold;
   font-size: clamp(0.7rem, 1.6vw, 0.95rem);
@@ -159,19 +159,19 @@ body {
   flex-wrap: wrap;
 }
 
-.scoreboard div:nth-child(1) span { color: #22c55e; }
-.scoreboard div:nth-child(2) span { color: #38bdf8; }
+.scoreboard div:nth-child(1) span { color: var(--yellow-accent); }
+.scoreboard div:nth-child(2) span { color: var(--yellow-accent); }
 .scoreboard div:nth-child(3) span { color: var(--yellow-accent); }
-
+.scoreboard div:nth-child(4) span { color: var(--yellow-accent); }
 /* Área do canvas e sobreposição mensagens do jogo */
 .canvas-wrapper {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   background-color: var(--screen-bg);
-  border-radius: 8px;
+  border-radius: 0px;
   overflow: hidden;
-  border: 2px solid #000000;
+  border: 1px solid #80808077;
 }
 
 canvas {
@@ -197,31 +197,29 @@ canvas {
 
 .overlay h2 {
   font-family: 'Press Start 2P', monospace;
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   color: #ef4444;
   margin-bottom: 12px;
 }
 
 .overlay p {
-  color: #94a3b8;
+  color: #e4e6e9;
   margin-bottom: 20px;
-  font-size: 0.85rem;
+  font-size: 1.5rem;
 }
 
 #start-btn {
-  background-color: #22c55e;
-  color: #030712;
+  background-color: #b1b6b3da;
   border: none;
-  padding: 10px 18px;
   font-family: 'Press Start 2P', monospace;
-  font-size: 0.7rem;
-  border-radius: 8px;
+  font-size: 2rem;
+  border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0 4px 0 #15803d;
+  box-shadow: 0 3px 0 #5c645f;
 }
 
 #start-btn:active {
-  transform: translateY(2px);
+  transform: translateY(5px);
   box-shadow: 0 2px 0 #15803d;
 }
 
@@ -232,7 +230,7 @@ canvas {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-top: 24px;
+  margin-top: 0px;
   padding: 0 10px;
 }
 
@@ -246,13 +244,13 @@ canvas {
 
 /* Botões de ação laterais, como pausa e início */
 .action-btn {
-  width: 52px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   background-color: var(--btn-dark);
   border: 2px solid var(--btn-border);
-  border-radius: 10px;
+  border-radius: px;
   color: var(--yellow-accent);
-  font-size: 1.1rem;
+  font-size: 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,12 +358,12 @@ canvas {
   }
 
   .side-btn-wrapper {
-    width: 52px;
+    width: 50px;
   }
 
   .action-btn {
-    width: 48px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
   }
 }
 
