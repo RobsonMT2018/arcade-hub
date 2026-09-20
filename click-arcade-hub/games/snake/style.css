@@ -56,7 +56,7 @@ body {
 }
 
 .gameboy-device.theme-gray {
-  background: linear-gradient(145deg, #e5e7eb 0%, #d1d5db 70%, #9ca3af 100%);
+  background: linear-gradient(145deg, #4b5563 0%, #374151 70%, #1f2937 100%);
 }
 
 .gameboy-device.theme-orange {
