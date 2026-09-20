@@ -253,8 +253,8 @@ function draw() {
   drawBackground();
 
   pipes.forEach((p) => {
-    ctx.fillStyle = '#22c55e';
-    ctx.strokeStyle = '#15803d';
+    ctx.fillStyle = '#25944d';
+    ctx.strokeStyle = '#17552ee0';
     ctx.lineWidth = 2;
 
     ctx.fillRect(p.x, 0, pipeWidth, p.top);
@@ -263,9 +263,9 @@ function draw() {
     ctx.fillRect(p.x, canvas.height - p.bottom, pipeWidth, p.bottom);
     ctx.strokeRect(p.x, canvas.height - p.bottom, pipeWidth, p.bottom);
 
-    ctx.fillStyle = '#16a34a';
-    ctx.fillRect(p.x - 4, p.top - 18, pipeWidth + 8, 18);
-    ctx.fillRect(p.x - 4, canvas.height - p.bottom, pipeWidth + 8, 18);
+    ctx.fillStyle = '#324646';
+    ctx.fillRect(p.x - 4, p.top - 18, pipeWidth + 8, 20);
+    ctx.fillRect(p.x - 4, canvas.height - p.bottom, pipeWidth + 8, 20);
   });
 
   ctx.fillStyle = '#facc15';
