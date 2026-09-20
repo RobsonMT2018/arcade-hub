@@ -29,6 +29,48 @@ let directionChangedThisTick = false;
 
 highScoreEl.innerText = highScore;
 
+const hasWallCollision = false; // true = com colisão | false = modo 'Pac-Man' (atravessa)
+
+
+// Parede Solida (Com Colisão / Game Over)
+
+function checkWallCollision(head, gridWidth, gridHeight) {
+  // Se ultrapassar os limites da tela (esquerda, direita, topo ou fundo)
+  if (
+    head.x < 0 || 
+    head.x >= gridWidth || 
+    head.y < 0 || 
+    head.y >= gridHeight
+  ) {
+    return true; // Colidiu com a parede -> Game Over
+  }
+  return false;
+}
+
+  
+// Parede Aberta (Sem Colisão / Portal Teletransporte)
+
+function wrapAroundWall(head, gridWidth, gridHeight) {
+  // Eixo X (Horizontal)
+  if (head.x < 0) {
+    head.x = gridWidth - 1; // Saiu pela esquerda, aparece na extrema direita
+  } else if (head.x >= gridWidth) {
+    head.x = 0; // Saiu pela direita, aparece na extrema esquerda
+  }
+
+  // Eixo Y (Vertical)
+  if (head.y < 0) {
+    head.y = gridHeight - 1; // Saiu pelo topo, aparece na base
+  } else if (head.y >= gridHeight) {
+    head.y = 0; // Saiu pela base, aparece no topo
+  }
+
+  return head;
+}
+
+
+
+
 // --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
@@ -296,9 +338,15 @@ function update() {
   const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
   // Colisão com as paredes
-  if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
-    gameOver();
-    return;
+  if (hasWallCollision){
+  // MODO 1: Morre ao bater na parede
+    if (checkWallCollision(head, GRID_WIDTH, GRID_HEIGHT)){
+      gameOver();
+      return;
+     }
+    }else {
+    // MODO 2: Atravessa para o outro lado
+    head = wrapAroundWall(head, GRID_WIDTH, GRID_HEIGHT);
   }
 
   // Colisão com o próprio corpo
