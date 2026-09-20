@@ -5,33 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flappy Bird | Arcade Hub</title>
   <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <div class="game-container">
-    <div class="header">
-      <a href="../../index.html" class="back-btn">⬅ Voltar ao Hub</a>
-      <h1>🐤 Flappy Bird</h1>
-    </div>
-
-    <div class="scoreboard">
-      <div>Pontos: <span id="score">0</span></div>
-      <div>Recorde: <span id="high-score">0</span></div>
-    </div>
-
-    <div class="canvas-wrapper">
-      <canvas id="flappyCanvas" width="360" height="480"></canvas>
-
-      <!-- Overlay de Game Over / Start -->
-      <div id="overlay" class="overlay">
-        <h2 id="overlay-title">Flappy Bird</h2>
-        <p id="overlay-msg">Clique ou Pressione 'Espaço' / 'Seta para Cima' para Voar</p>
-        <button id="start-btn" onclick="startGame()">Jogar</button>
+  <div class="gameboy-device theme-orange">
+    <div class="console-header">
+      <div class="power-indicator">
+        <span class="power-led"></span>
+        <span class="power-label">POWER</span>
       </div>
+
+      <a href="../../../index.html" class="back-hub-btn" title="Voltar ao Hub">
+        BACK TO ARCADE HUB
+      </a>
+
+      <div class="console-title">FLAPPY BIRD</div>
     </div>
 
-    <div class="controls-info">
-      <p>Controles: <strong>Clique na tela</strong>, <strong>Espaço</strong> ou <strong>Seta Cima</strong></p>
+    <div class="screen-bezel">
+      <div class="scoreboard">
+        <div>Pontos: <span id="score">0</span></div>
+        <div>Recorde: <span id="high-score">0</span></div>
+      </div>
+
+      <div class="canvas-wrapper" id="game-area">
+        <canvas id="flappyCanvas" width="360" height="480"></canvas>
+
+        <div id="overlay" class="overlay">
+          <h2 id="overlay-title">COMO JOGAR</h2>
+          <p id="overlay-msg">Toque na tela para fazer o pássaro voar</p>
+        </div>
+      </div>
     </div>
   </div>
 

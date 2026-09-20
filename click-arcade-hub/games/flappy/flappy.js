@@ -6,6 +6,7 @@ const highScoreEl = document.getElementById('high-score');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayMsg = document.getElementById('overlay-msg');
+const gameArea = document.getElementById('game-area');
 
 let score = 0;
 let highScore = localStorage.getItem('flappy_highscore') || 0;
@@ -31,17 +32,24 @@ const pipeGap = 120;
 let frameCount = 0;
 
 // Eventos de Pulo
-document.addEventListener('keydown', (e) => {
-  if (e.key === ' ' || e.key === 'ArrowUp') {
-    e.preventDefault();
-    if (gameRunning) flap();
-    else startGame();
+document.addEventListener('keydown', (event) => {
+  if (event.key === ' ' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    handleInput();
   }
 });
 
-canvas.addEventListener('click', () => {
-  if (gameRunning) flap();
+gameArea.addEventListener('pointerdown', (event) => {
+  event.preventDefault();
+  handleInput();
 });
+
+function handleInput() {
+  if (!gameRunning) {
+    startGame();
+  }
+  flap();
+}
 
 function flap() {
   bird.velocity = bird.jump;
@@ -189,8 +197,8 @@ function gameOver() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
 
-  overlayTitle.innerText = 'Game Over!';
+  overlayTitle.innerText = 'FIM DE JOGO';
   overlayTitle.style.color = '#ef4444';
-  overlayMsg.innerText = `Sua pontuação foi: ${score}`;
+  overlayMsg.innerText = `Pontuacao final: ${score}. Toque para tentar novamente`;
   overlay.style.display = 'flex';
 }

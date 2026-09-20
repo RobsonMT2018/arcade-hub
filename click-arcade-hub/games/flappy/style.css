@@ -1,143 +1,209 @@
 :root {
-  --bg-color: #0f172a;
-  --card-bg: #1e293b;
-  --accent-color: #f59e0b;
-  --text-color: #f8fafc;
-  --text-muted: #94a3b8;
-  --border-color: #334155;
+  --bg-color: #080c14;
+  --bezel-bg: #111622;
+  --bezel-border: #1a2233;
+  --screen-bg: #030712;
+  --yellow-accent: #facc15;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 body {
   background-color: var(--bg-color);
-  color: var(--text-color);
+  color: #ffffff;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 18px 12px;
+  font-family: 'Share Tech Mono', monospace;
 }
 
-.game-container {
-  background-color: var(--card-bg);
-  padding: 1.5rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+.gameboy-device {
+  width: min(92vw, 520px);
+  padding: 18px 16px 22px;
+  border-radius: 28px 28px 45px 45px;
+  background: linear-gradient(145deg, #ffb067 0%, #ff9f43 70%, #cc6a10 100%);
+  border: 1px solid #0a0a0a;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -4px 8px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 420px;
-  width: 100%;
 }
 
-.header {
+.console-header {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  margin-bottom: 1rem;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 0 4px;
 }
 
-.header h1 {
-  font-size: 1.4rem;
-  color: var(--accent-color);
+.power-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.back-btn {
-  color: var(--text-muted);
+.power-led {
+  width: 20px;
+  height: 20px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e, inset 0 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.power-label,
+.back-hub-btn,
+.console-title,
+.overlay h2 {
+  font-family: 'Press Start 2P', monospace;
+}
+
+.power-label {
+  font-size: 0.6rem;
+}
+
+.back-hub-btn {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffffa9;
   text-decoration: none;
-  font-size: 0.9rem;
-  border: 1px solid var(--border-color);
-  padding: 4px 8px;
+  font-size: clamp(0.56rem, 1.4vw, 0.8rem);
+  padding: 6px 10px;
   border-radius: 6px;
-  transition: 0.2s;
+  text-align: center;
+  white-space: nowrap;
 }
 
-.back-btn:hover {
-  color: #fff;
-  border-color: var(--accent-color);
+.back-hub-btn:hover {
+  background: rgba(0, 0, 0, 0.7);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.console-title {
+  color: #7a420e;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-align: center;
+  justify-self: end;
+}
+
+.screen-bezel {
+  width: 100%;
+  padding: 10px;
+  background-color: var(--bezel-bg);
+  border: 2px solid var(--bezel-border);
+  border-radius: 16px;
+  box-shadow: inset 0 4px 10px rgba(216, 216, 216, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .scoreboard {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  background-color: #0f172a;
-  padding: 0.75rem 1rem;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background-color: rgba(124, 124, 124, 0.438);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   font-weight: bold;
-  font-size: 1.1rem;
-  margin-bottom: 1rem;
-  border: 1px solid var(--border-color);
+  font-size: clamp(0.7rem, 1.6vw, 0.95rem);
+}
+
+.scoreboard span {
+  color: var(--yellow-accent);
 }
 
 .canvas-wrapper {
   position: relative;
-  width: 360px;
-  height: 480px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: var(--screen-bg);
+  border: 1px solid #80808077;
+  touch-action: none;
+  cursor: pointer;
 }
 
 canvas {
-  background-color: #38bdf8; /* Azul Céu */
-  border: 2px solid var(--border-color);
-  border-radius: 8px;
   display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(15, 23, 42, 0.85);
+  inset: 0;
+  background: rgba(3, 7, 18, 0.94);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 8px;
+  padding: 16px;
   text-align: center;
-  padding: 1rem;
+  cursor: pointer;
 }
 
 .overlay h2 {
-  font-size: 1.8rem;
-  color: var(--accent-color);
-  margin-bottom: 0.5rem;
+  margin-bottom: 16px;
+  color: var(--yellow-accent);
+  font-size: clamp(1rem, 4vw, 1.5rem);
 }
 
 .overlay p {
-  color: var(--text-muted);
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+  max-width: 280px;
+  color: #e4e6e9;
+  font-size: clamp(1rem, 4vw, 1.35rem);
+  line-height: 1.35;
 }
 
-button {
-  background-color: var(--accent-color);
-  color: #000;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.1s, background 0.2s;
+@media (max-width: 480px) {
+  body {
+    padding: 12px 8px;
+  }
+
+  .gameboy-device {
+    width: min(96vw, 420px);
+    padding: 14px 12px 18px;
+  }
+
+  .console-header {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .power-indicator,
+  .console-title {
+    justify-self: center;
+  }
+
+  .back-hub-btn {
+    order: 2;
+    width: 100%;
+  }
+
+  .screen-bezel {
+    padding: 8px;
+  }
 }
 
-button:hover {
-  background-color: #d97706;
-  transform: scale(1.05);
-}
-
-.controls-info {
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-align: center;
+@media (max-width: 360px) {
+  .scoreboard {
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+  }
 }
