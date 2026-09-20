@@ -11,10 +11,9 @@
 </head>
 <body>
 
-  <!-- Console Game Boy Estilo -->
-    <div class="gameboy-device theme-gray">
-
-    <!-- Cabeçalho do Console com Voltar ao Hub Centralizado -->
+  <!-- Estrutura principal do console Game Boy estilo arcade -->
+  <div class="gameboy-device theme-gray">
+    <!-- Cabeçalho com indicador de energia, botão de retorno e nome do jogo -->
     <div class="console-header">
       <div class="power-indicator">
         <span class="power-led"></span>
@@ -28,21 +27,22 @@
       <div class="console-title">SNAKE GAME</div>
     </div>
 
-    <!-- Moldura Interna da Tela -->
+    <!-- Área interna da tela do console e painel do jogo -->
     <div class="screen-bezel">
       
-      <!-- Placar do Jogo -->
+      <!-- Placar com pontuação, velocidade, nível e recorde -->
       <div class="scoreboard">
         <div>Pontos: <span id="score">0</span></div>
         <div>Speed: <span id="speed">1</span></div>
+        <div>Nível: <span id="level">1</span></div>
         <div>Recorde: <span id="high-score">0</span></div>
       </div>
 
-      <!-- Canvas do Jogo -->
+      <!-- área do canvas onde o jogo é desenhado -->
       <div class="canvas-wrapper">
         <canvas id="snakeCanvas" width="400" height="400"></canvas>
         
-        <!-- Overlay de Game Over / Start -->
+        <!-- Sobreposição que mostra mensagens do jogo, como pausa, início e fim -->
         <div id="overlay" class="overlay">
           <h2 id="overlay-title">Fim de Jogo</h2>
           <p id="overlay-msg">Sua pontuação final foi: <span id="final-score">0</span></p>
@@ -50,15 +50,15 @@
       </div>
     </div>
 
-    <!-- Seção Inferior de Controles -->
+    <!-- Área inferior com os botões de controle do jogo -->
     <div class="controls-layout">
       
-      <!-- Botão Pause (Esquerda) -->
+      <!-- Botão de pausa localizado à esquerda -->
       <div class="side-btn-wrapper left">
         <button class="action-btn" id="btn-pause" aria-label="Pausa">⏸</button>
       </div>
 
-      <!-- D-Pad Direcional Centralizado -->
+      <!-- D-pad central para mover a cobra em todas as direções -->
       <div class="dpad-container">
         <button class="dpad-btn dpad-up" id="btn-up" aria-label="Cima">↑</button>
         <button class="dpad-btn dpad-left" id="btn-left" aria-label="Esquerda">←</button>
@@ -67,7 +67,7 @@
         <button class="dpad-btn dpad-down" id="btn-down" aria-label="Baixo">↓</button>
       </div>
 
-      <!-- Botão Play (Direita) -->
+      <!-- Botão principal para iniciar ou reiniciar a partida -->
       <div class="side-btn-wrapper right">
         <button class="action-btn play-btn" id="start-btn"  onclick="startGame()">▶</button>
       </div>

@@ -3,12 +3,12 @@ const ctx = canvas.getContext('2d');
 
 const scoreEl = document.getElementById('score');
 const speedEl = document.getElementById('speed');
+const levelEl = document.getElementById('level');
 const highScoreEl = document.getElementById('high-score');
 const overlay = document.getElementById('overlay');
 const overlayTitle = document.getElementById('overlay-title');
 const overlayMsg = document.getElementById('overlay-msg');
 const btnStart = document.getElementById('start-btn');
-const btnPlay = document.getElementById('btn-play');
 
 const gridSize = 20;
 const tileCount = canvas.width / gridSize;
@@ -26,6 +26,95 @@ let gameInterval = null;
 let isPaused = false;
 let gameRunning = false;
 let directionChangedThisTick = false;
+let hasWalls = true;
+let obstacles = [];
+let currentLevelIndex = 0;
+
+const LEVELS = [
+  {
+    id: 1,
+    name: 'Nível 1',
+    hasWalls: true,
+    obstacles: [],
+    badAppleChance: 0,
+    nextScoreTarget: 30
+  },
+  {
+    id: 2,
+    name: 'Nível 2',
+    hasWalls: false,
+    obstacles: [],
+    badAppleChance: 0,
+    nextScoreTarget: 60
+  },
+  {
+    id: 3,
+    name: 'Nível 3',
+    hasWalls: true,
+    obstacles: [
+      { x: 120, y: 120 }, { x: 140, y: 120 }, { x: 160, y: 120 }, { x: 180, y: 120 },
+      { x: 200, y: 120 }, { x: 220, y: 120 }, { x: 240, y: 120 },
+      { x: 120, y: 260 }, { x: 140, y: 260 }, { x: 160, y: 260 }, { x: 180, y: 260 },
+      { x: 200, y: 260 }, { x: 220, y: 260 }, { x: 240, y: 260 },
+      { x: 120, y: 160 }, { x: 120, y: 180 }, { x: 120, y: 200 }, { x: 120, y: 220 },
+      { x: 260, y: 160 }, { x: 260, y: 180 }, { x: 260, y: 200 }, { x: 260, y: 220 }
+    ],
+    badAppleChance: 0,
+    nextScoreTarget: 90
+  },
+  {
+    id: 4,
+    name: 'Nível 4',
+    hasWalls: true,
+    obstacles: [],
+    badAppleChance: 0.35,
+    nextScoreTarget: 120
+  }
+];
+
+// Alterna o modo de bordas do jogo: true = parede, false = wrap no outro lado.
+function setWallMode(enabled) {
+  hasWalls = Boolean(enabled);
+}
+
+// Retorna a configuração do nível atual.
+function getLevelConfig() {
+  return LEVELS[currentLevelIndex] || LEVELS[0];
+}
+
+// Aplica as regras do nível selecionado: paredes, obstáculos e maças especiais.
+function applyLevel(levelIndex) {
+  currentLevelIndex = Math.max(0, Math.min(levelIndex, LEVELS.length - 1));
+  const level = getLevelConfig();
+  hasWalls = level.hasWalls;
+  obstacles = level.obstacles.map((block) => ({ ...block }));
+
+  if (levelEl) {
+    levelEl.innerText = String(currentLevelIndex + 1);
+  }
+
+  if (overlay && overlay.style.display === 'flex' && gameRunning) {
+    overlayTitle.innerText = `${level.name}`;
+    overlayTitle.style.color = '#facc15';
+    overlayMsg.innerText = level.hasWalls ? 'Paredes ativas' : 'Sem paredes — wrap ativado';
+  }
+}
+
+// Avança para o próximo nível quando a pontuação atinge o alvo.
+function advanceLevelIfNeeded() {
+  const level = getLevelConfig();
+  if (score >= level.nextScoreTarget && currentLevelIndex < LEVELS.length - 1) {
+    const nextIndex = currentLevelIndex + 1;
+    applyLevel(nextIndex);
+    overlayTitle.innerText = `${getLevelConfig().name} ativo`;
+    overlayTitle.style.color = '#facc15';
+    overlayMsg.innerText = 'Nível avançado!';
+    overlay.style.display = 'flex';
+    setTimeout(() => {
+      if (gameRunning) overlay.style.display = 'none';
+    }, 800);
+  }
+}
 
 highScoreEl.innerText = highScore;
 
@@ -71,6 +160,7 @@ function wrapAroundWall(head, gridWidth, gridHeight) {
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 
+// Inicializa o áudio do navegador para reproduzir efeitos sonoros do jogo.
 function initAudio() {
   if (!AudioCtx) return false;
 
@@ -84,6 +174,7 @@ function initAudio() {
   }
 }
 
+// Toca um som leve quando a cobra se move.
 function playSoundMove() {
   if (!initAudio()) return;
   
@@ -108,6 +199,7 @@ function playSoundMove() {
   }
 }
 
+// Toca um som ao comer uma maçã válida.
 function playEatSound() {
   if (!initAudio()) return;
 
@@ -132,6 +224,7 @@ function playEatSound() {
   }
 }
 
+// Toca um som ao perder o jogo.
 function playGameOverSound() {
   if (!initAudio()) return;
 
@@ -156,6 +249,7 @@ function playGameOverSound() {
   }
 }
 
+// Toca um som de clique ao iniciar ou pausar o jogo.
 function playClickSound() {
   if (!initAudio()) return;
 
@@ -180,6 +274,7 @@ function playClickSound() {
 }
 
 // Teclado
+// Escuta as teclas do teclado para controlar a cobra.
 document.addEventListener('keydown', handleKeyPress);
 
 function handleKeyPress(e) {
@@ -206,6 +301,7 @@ function handleKeyPress(e) {
   else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveRight();
 }
 
+// Move a cobra para cima sem permitir reverso imediato.
 function moveUp() {
   if (dy === 0 && !directionChangedThisTick) {
     dx = 0;
@@ -213,6 +309,8 @@ function moveUp() {
     directionChangedThisTick = true;
   }
 }
+
+// Move a cobra para baixo sem permitir reverso imediato.
 function moveDown() {
   if (dy === 0 && !directionChangedThisTick) {
     dx = 0;
@@ -220,6 +318,7 @@ function moveDown() {
     directionChangedThisTick = true;
   }
 }
+// Move a cobra para a esquerda sem permitir reverso imediato.
 function moveLeft() {
   if (dx === 0 && !directionChangedThisTick) {
     dx = -gridSize;
@@ -227,6 +326,8 @@ function moveLeft() {
     directionChangedThisTick = true;
   }
 }
+
+// Move a cobra para a direita sem permitir reverso imediato.
 function moveRight() {
   if (dx === 0 && !directionChangedThisTick) {
     dx = gridSize;
@@ -235,6 +336,7 @@ function moveRight() {
   }
 }
 
+// Associa os botões touch ou clique dos controles do jogo às funções de movimento.
 function bindTouchButton(id, action) {
   const btn = document.getElementById(id);
   if (!btn) return;
@@ -274,8 +376,8 @@ if (btnPause) {
   });
 }
 
-// Botão Play (Apenas este reinicia o jogo)
-if (btnPlay) {
+// Botão Play / Reiniciar
+if (btnStart) {
   let lastPlayPointerTime = 0;
   const handlePlay = (e) => {
     e.preventDefault();
@@ -284,17 +386,19 @@ if (btnPlay) {
       startGame();
     }
   };
-  
-  btnPlay.addEventListener('pointerdown', handlePlay, { passive: false });
-  btnPlay.addEventListener('click', (e) => {
+
+  btnStart.addEventListener('pointerdown', handlePlay, { passive: false });
+  btnStart.addEventListener('click', (e) => {
     if (Date.now() - lastPlayPointerTime > 500) handlePlay(e);
   });
 }
 
+// Reinicia a partida com as configurações do nível 1.
 function startGame() {
   initAudio();
   playClickSound();
 
+  applyLevel(0);
   snake = [
     { x: 160, y: 200 },
     { x: 140, y: 200 },
@@ -309,40 +413,53 @@ function startGame() {
 
   scoreEl.innerText = score;
   speedEl.innerText = speedLevel;
+  if (levelEl) levelEl.innerText = String(currentLevelIndex + 1);
   isPaused = false;
   gameRunning = true;
   directionChangedThisTick = false;
 
+  if (btnStart) btnStart.innerText = '↻';
+  overlayTitle.innerText = `${getLevelConfig().name}`;
+  overlayTitle.style.color = '#facc15';
+  overlayMsg.innerText = getLevelConfig().hasWalls ? 'Paredes ativas' : 'Sem paredes — wrap ativado';
   overlay.style.display = 'none';
   generateFood();
 
   resetGameLoop();
 }
 
+// Recria o intervalo do loop principal com a velocidade atual.
 function resetGameLoop() {
   if (gameInterval) clearInterval(gameInterval);
   gameInterval = setInterval(gameLoop, currentIntervalMs);
 }
 
+// Executa uma rodada do jogo: atualiza a lógica e redesenha o frame.
 function gameLoop() {
   update();
   draw();
 }
 
+// Atualiza a posição da cobra, verifica colisões e trata as maçãs.
 function update() {
   directionChangedThisTick = false;
   const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
-  // Colisão com as paredes
-  if (hasWallCollision){
-  // MODO 1: Morre ao bater na parede
-    if (checkWallCollision(head, GRID_WIDTH, GRID_HEIGHT)){
-      gameOver();
-      return;
-     }
-    }else {
-    // MODO 2: Atravessa para o outro lado
-    head = wrapAroundWall(head, GRID_WIDTH, GRID_HEIGHT);
+  if (!hasWalls) {
+    if (head.x < 0) head.x = canvas.width - gridSize;
+    else if (head.x >= canvas.width) head.x = 0;
+
+    if (head.y < 0) head.y = canvas.height - gridSize;
+    else if (head.y >= canvas.height) head.y = 0;
+  } else if (head.x < 0 || head.x >= canvas.width || head.y < 0 || head.y >= canvas.height) {
+    gameOver();
+    return;
+  }
+
+  const hitObstacle = obstacles.some((block) => block.x === head.x && block.y === head.y);
+  if (hitObstacle) {
+    gameOver();
+    return;
   }
 
   // Colisão com o próprio corpo
@@ -359,7 +476,16 @@ function update() {
   // Comeu a maçã
   if (head.x === food.x && head.y === food.y) {
     playEatSound();
-    score += 10;
+
+    if (food.bad) {
+      if (snake.length > 1) {
+        snake.pop();
+      }
+      score = Math.max(0, score - 10);
+    } else {
+      score += 10;
+    }
+
     applesEaten++;
 
     // A cada 10 maçãs comidas, aumenta a velocidade
@@ -381,19 +507,26 @@ function update() {
       localStorage.setItem('snake_highscore', highScore);
     }
 
+    advanceLevelIfNeeded();
     generateFood();
   } else {
     snake.pop();
   }
 }
 
+// Desenha o fundo, obstáculos, maças e cobra na tela.
 function draw() {
   ctx.fillStyle = '#030712';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  obstacles.forEach((block) => {
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(block.x, block.y, gridSize - 2, gridSize - 2);
+  });
+
   // Maçã
-  ctx.fillStyle = '#ef4444';
-  ctx.shadowColor = '#ef4444';
+  ctx.fillStyle = food.bad ? '#7c3aed' : '#ef4444';
+  ctx.shadowColor = food.bad ? '#7c3aed' : '#ef4444';
   ctx.shadowBlur = 8;
   ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
   ctx.shadowBlur = 0;
@@ -405,17 +538,25 @@ function draw() {
   });
 }
 
+// Gera uma nova posição para a maçã, evitando o corpo da cobra e os obstáculos.
 function generateFood() {
-  food.x = Math.floor(Math.random() * tileCount) * gridSize;
-  food.y = Math.floor(Math.random() * tileCount) * gridSize;
+  let nextX;
+  let nextY;
+  let isBad = false;
 
-  snake.forEach(part => {
-    if (part.x === food.x && part.y === food.y) {
-      generateFood();
-    }
-  });
+  do {
+    nextX = Math.floor(Math.random() * tileCount) * gridSize;
+    nextY = Math.floor(Math.random() * tileCount) * gridSize;
+    isBad = getLevelConfig().badAppleChance > 0 && Math.random() < getLevelConfig().badAppleChance;
+  } while (
+    snake.some((part) => part.x === nextX && part.y === nextY) ||
+    obstacles.some((block) => block.x === nextX && block.y === nextY)
+  );
+
+  food = { x: nextX, y: nextY, bad: isBad };
 }
 
+// Alterna entre pausa e retorno do jogo.
 function togglePause() {
   playClickSound();
   if (isPaused) {
@@ -432,6 +573,7 @@ function togglePause() {
   }
 }
 
+// Finaliza a partida quando a cobra colide com algo proibido.
 function gameOver() {
   clearInterval(gameInterval);
   gameRunning = false;
@@ -440,7 +582,7 @@ function gameOver() {
   overlayTitle.innerText = 'Fim de Jogo';
   overlayTitle.style.color = '#ef4444';
   overlayMsg.innerText = `Sua pontuação final foi: ${score}`;
-  
+
   if (btnStart) btnStart.innerText = '▶';
 
   overlay.style.display = 'flex';

@@ -17,7 +17,7 @@
 
 | Ícone | Jogo | Descrição | Status |
 | :---: | :--- | :--- | :---: |
-| 🐍 | **Snake Game** | Jogo clássico da cobrinha com pontuação, recorde e pausa | ![Jogável](https://img.shields.io/badge/Status-Jog%C3%A1vel-brightgreen?style=flat-square) |
+| 🐍 | **Snake Game** | Jogo clássico da cobrinha com níveis, paredes, wrap, obstáculos e maçãs especiais | ![Jogável](https://img.shields.io/badge/Status-Jog%C3%A1vel-brightgreen?style=flat-square) |
 | 🐤 | **Flappy Bird** | Desafio de física com desvio de obstáculos e recorde | ![Jogável](https://img.shields.io/badge/Status-Jog%C3%A1vel-brightgreen?style=flat-square) 
 | 🏎️ | **Racing Game** | Jogo de corrida 2D com efeito parallax | ![Em Breve](https://img.shields.io/badge/Status-Em%20Breve-orange?style=flat-square) |
 | 🎨 | **Color Code Game** | Puzzle visual de lógica e memória | ![Em Breve](https://img.shields.io/badge/Status-Em%20Breve-orange?style=flat-square) |
@@ -31,31 +31,28 @@
 
 ```text
 arcade-hub/
-├── index.html              # Página principal do portal (Arcade Hub)
-├── style.css               # Estilos globais do hub
-├── script.js               # Lógica de navegação do hub
-├── README.md               # Documentação do projeto
-└── games/                  # Pasta contendo todos os jogos
-    ├── snake/              # Jogo da Cobrinha 🐍
-    │   ├── index.html
-    │   ├── style.css
-    │   └── script.js
-    ├── flappy-bird/        # Flappy Bird 🐤
-    │   ├── index.html
-    │   ├── style.css
-    │   └── script.js
-    ├── racing/             # Corridas 🏎️
-    │   ├── index.html
-    │   ├── style.css
-    │   └── script.js
-    ├── color-code/         # Color Code Game 🎨
-    │   ├── index.html
-    │   ├── style.css
-    │   └── script.js
-    └── threejs-demo/       # Experiência 3D 🧊
-        ├── index.html
-        ├── style.css
-        └── script.js
+├── index.html                     # Página principal do portal (Arcade Hub)
+├── style.css                      # Estilos globais do hub
+├── README.md                      # Documentação do projeto
+├── LICENSE                        # Licença do projeto
+├── pushcommit.sh                  # Script auxiliar de versionamento
+├── click-arcade-hub/              # Estrutura principal dos jogos
+│   ├── assets/
+│   │   └── img/
+│   ├── games/
+│   │   ├── snake/
+│   │   │   ├── index.html
+│   │   │   ├── style.css
+│   │   │   └── snake.js
+│   │   ├── flappy/
+│   │   │   ├── index.html
+│   │   │   ├── style.css
+│   │   │   └── flappy.js
+│   │   ├── racing/
+│   │   ├── color-code/
+│   │   └── threesjs/
+│   └── commit.sh
+└── ...
 ```
 <p align="center">
   Desenvolvido por <strong>Robson Maciel Tomosique</strong> 🚀

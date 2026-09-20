@@ -1,4 +1,5 @@
 :root {
+  /* Paleta de cores base do jogo e do console */
   --bg-color: #080c14;
   --bezel-bg: #111622;
   --bezel-border: #1a2233;
@@ -18,6 +19,7 @@
 }
 
 body {
+  /* Centraliza o console na página e define o fundo escuro da hub */
   background-color: var(--bg-color);
   color: #ffffff;
   min-height: 100vh;
@@ -28,8 +30,7 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-
-/* Gradiente Padrão/Base da estrutura */
+/* Corpo principal do console Game Boy */
 .gameboy-device {
   width: min(92vw, 520px);
   max-width: 520px;
@@ -63,8 +64,7 @@ body {
   background: linear-gradient(145deg, #ffb067 0%, #ff9f43 70%, #cc6a10 100%);
 }
 
-
-/* Cabeçalho do Console */
+/* Cabeçalho com poder, navegação e nome do jogo */
 .console-header {
   width: 100%;
   display: grid;
@@ -130,7 +130,7 @@ body {
   justify-self: end;
 }
 
-/* Moldura Interna da Tela */
+/* Moldura interna da tela do console */
 .screen-bezel {
   background-color: var(--bezel-bg);
   width: 100%;
@@ -143,7 +143,7 @@ body {
   align-items: center;
 }
 
-/* Placar de Pontuação */
+/* Placar com pontuação, velocidade, nível e recorde */
 .scoreboard {
   width: 100%;
   display: flex;
@@ -163,7 +163,7 @@ body {
 .scoreboard div:nth-child(2) span { color: #38bdf8; }
 .scoreboard div:nth-child(3) span { color: var(--yellow-accent); }
 
-/* Canvas e Overlay */
+/* Área do canvas e sobreposição mensagens do jogo */
 .canvas-wrapper {
   position: relative;
   width: 100%;
@@ -225,7 +225,7 @@ canvas {
   box-shadow: 0 2px 0 #15803d;
 }
 
-/* Layout Inferior dos Controles (Pause - DPad - Play) */
+/* Layout inferior com pausa, D-pad e botão de play */
 .controls-layout {
   width: 100%;
   display: flex;
@@ -244,7 +244,7 @@ canvas {
   flex-shrink: 0;
 }
 
-/* Botões de Ação (Pause e Play) */
+/* Botões de ação laterais, como pausa e início */
 .action-btn {
   width: 52px;
   height: 44px;
@@ -270,7 +270,7 @@ canvas {
   color: var(--yellow-accent);
 }
 
-/* D-Pad Direcional em Cruz */
+/* D-pad em cruz para controle por toque ou mouse */
 .dpad-container {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
