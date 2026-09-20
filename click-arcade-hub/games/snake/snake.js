@@ -1,239 +1,451 @@
-// ==========================================
-// CONFIGURAÇÕES E ESTADO DO JOGO
-// ==========================================
-const canvas = document.getElementById('gameCanvas') || document.querySelector('canvas');
+const canvas = document.getElementById('snakeCanvas');
 const ctx = canvas.getContext('2d');
 
-// Tamanho do Grid (ex: 20x20 blocos)
+const scoreEl = document.getElementById('score');
+const speedEl = document.getElementById('speed');
+const highScoreEl = document.getElementById('high-score');
+const overlay = document.getElementById('overlay');
+const overlayTitle = document.getElementById('overlay-title');
+const overlayMsg = document.getElementById('overlay-msg');
+const btnStart = document.getElementById('start-btn');
+const btnPlay = document.getElementById('btn-play');
+
 const gridSize = 20;
-const tileCount = canvas ? canvas.width / gridSize : 20;
+const tileCount = canvas.width / gridSize;
 
-// Cobra e Comida
 let snake = [];
-let food = { x: 10, y: 10 };
-
-// Velocidade e Direção (dx, dy)
-let dx = 1;
+let food = { x: 0, y: 0 };
+let dx = gridSize;
 let dy = 0;
-let nextDx = 1;
-let nextDy = 0;
-
-// Placar
 let score = 0;
+let applesEaten = 0;
+let speedLevel = 0;
+let currentIntervalMs = 240; // Tempo por frame em ms
 let highScore = localStorage.getItem('snake_highscore') || 0;
-
-// Estados do Jogo
-let gameLoopInterval = null;
+let gameInterval = null;
 let isPaused = false;
-let isGameOver = false;
-const gameSpeed = 120; // Atualização a cada 120ms
+let gameRunning = false;
+let directionChangedThisTick = false;
 
-// MODOS DE PAREDE:
-// true  = Modo Clássico (Com colisão nas bordas)
-// false = Modo Pac-Man (Sem colisão, atravessa a borda)
-let hasWallCollision = false;
+highScoreEl.innerText = highScore;
 
-// ==========================================
-// INICIALIZAÇÃO E REINÍCIO
-// ==========================================
-function initGame() {
-  snake = [
-    { x: 10, y: 10 },
-    { x: 9, y: 10 },
-    { x: 8, y: 10 }
-  ];
-  
-  dx = 1;
-  dy = 0;
-  nextDx = 1;
-  nextDy = 0;
-  score = 0;
-  isPaused = false;
-  isGameOver = false;
+const hasWallCollision = false; 
 
-  updateScoreDisplay();
-  generateFood();
+// Parede Solida (Com Colisão / Game Over)
 
-  if (gameLoopInterval) clearInterval(gameLoopInterval);
-  gameLoopInterval = setInterval(gameLoop, gameSpeed);
+function checkWallCollision(head, gridWidth, gridHeight) {
+ 
+  if (
+    head.x < 0 || 
+    head.x >= gridWidth || 
+    head.y < 0 || 
+    head.y >= gridHeight
+  ) {
+    return true; // Colidiu com a parede -> Game Over
+  }
+  return false;
 }
 
-// ==========================================
-// LOOP PRINCIPAL DO JOGO
-// ==========================================
-function gameLoop() {
-  if (isPaused || isGameOver) return;
+  
+// Parede Aberta (Sem Colisão / Portal Teletransporte)
 
+function wrapAroundWall(head, gridWidth, gridHeight) {
+
+  // Eixo X (Horizontal)
+  if (head.x < 0) {
+    head.x = gridWidth - 1; // Saiu pela esquerda, aparece na extrema direita
+  } else if (head.x >= gridWidth) {
+    head.x = 0; 
+  }
+
+  // Eixo Y (Vertical)
+  if (head.y < 0) {
+    head.y = gridHeight - 1; // Saiu pelo topo, aparece na base
+  } else if (head.y >= gridHeight) {
+    head.y = 0; // Saiu pela base, aparece no topo
+  }
+
+  return head;
+}
+
+
+
+
+// --- SINTETIZADOR DE EFEITOS SONOROS (Web Audio API) ---
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+
+function initAudio() {
+  if (!AudioCtx) return false;
+
+  try {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return true;
+  } catch (error) {
+    audioCtx = null;
+    return false;
+  }
+}
+
+function playSoundMove() {
+  if (!initAudio()) return;
+  
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(200, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch (error) {
+    audioCtx = null;
+  }
+}
+
+function playEatSound() {
+  if (!initAudio()) return;
+
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
+
+    gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.1);
+  } catch (error) {
+    audioCtx = null;
+  }
+}
+
+function playGameOverSound() {
+  if (!initAudio()) return;
+
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.4);
+
+    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.4);
+  } catch (error) {
+    audioCtx = null;
+  }
+}
+
+function playClickSound() {
+  if (!initAudio()) return;
+
+  try {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
+
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.05);
+  } catch (error) {
+    audioCtx = null;
+  }
+}
+
+// Teclado
+document.addEventListener('keydown', handleKeyPress);
+
+function handleKeyPress(e) {
+  if (e.key === ' ') {
+    if (!gameRunning) {
+      startGame();
+    } else {
+      togglePause();
+    }
+    return;
+  }
+
+  if (e.key === 'p' || e.key === 'P') {
+    if (gameRunning) togglePause();
+    return;
+  }
+
+ // Se o jogo não estiver a rodar ou estiver pausado, ignora as setas direcionais
+  if (!gameRunning || isPaused) return;
+
+  if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') moveUp();
+  else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') moveDown();
+  else if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveLeft();
+  else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveRight();
+}
+
+function moveUp() {
+  if (dy === 0 && !directionChangedThisTick) {
+    dx = 0;
+    dy = -gridSize;
+    directionChangedThisTick = true;
+  }
+}
+function moveDown() {
+  if (dy === 0 && !directionChangedThisTick) {
+    dx = 0;
+    dy = gridSize;
+    directionChangedThisTick = true;
+  }
+}
+function moveLeft() {
+  if (dx === 0 && !directionChangedThisTick) {
+    dx = -gridSize;
+    dy = 0;
+    directionChangedThisTick = true;
+  }
+}
+function moveRight() {
+  if (dx === 0 && !directionChangedThisTick) {
+    dx = gridSize;
+    dy = 0;
+    directionChangedThisTick = true;
+  }
+}
+
+function bindTouchButton(id, action) {
+  const btn = document.getElementById(id);
+  if (!btn) return;
+
+  let lastPointerTime = 0;
+  const handlePointer = (e) => {
+    e.preventDefault();
+    lastPointerTime = Date.now();
+    if (gameRunning && !isPaused) action();
+  };
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (Date.now() - lastPointerTime > 500 && gameRunning && !isPaused) action();
+  };
+
+  btn.addEventListener('pointerdown', handlePointer, { passive: false });
+  btn.addEventListener('click', handleClick);
+}
+
+bindTouchButton('btn-up', moveUp);
+bindTouchButton('btn-down', moveDown);
+bindTouchButton('btn-left', moveLeft);
+bindTouchButton('btn-right', moveRight);
+
+const btnPause = document.getElementById('btn-pause');
+if (btnPause) {
+  let lastPausePointerTime = 0;
+  const handlePause = (e) => {
+    e.preventDefault();
+    lastPausePointerTime = Date.now();
+    if (gameRunning) togglePause();
+  };
+  btnPause.addEventListener('pointerdown', handlePause, { passive: false });
+  btnPause.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (Date.now() - lastPausePointerTime > 500 && gameRunning) togglePause();
+  });
+}
+
+// Botão Play (Apenas este reinicia o jogo)
+if (btnPlay) {
+  let lastPlayPointerTime = 0;
+  const handlePlay = (e) => {
+    e.preventDefault();
+    lastPlayPointerTime = Date.now();
+    if (!gameRunning || isPaused) {
+      startGame();
+    }
+  };
+  
+  btnPlay.addEventListener('pointerdown', handlePlay, { passive: false });
+  btnPlay.addEventListener('click', (e) => {
+    if (Date.now() - lastPlayPointerTime > 500) handlePlay(e);
+  });
+}
+
+function startGame() {
+  initAudio();
+  playClickSound();
+
+  snake = [
+    { x: 160, y: 200 },
+    { x: 140, y: 200 },
+    { x: 120, y: 200 }
+  ];
+  dx = gridSize;
+  dy = 0;
+  score = 0;
+  applesEaten = 0;
+  speedLevel = 1;
+  currentIntervalMs = 240;
+
+  scoreEl.innerText = score;
+  speedEl.innerText = speedLevel;
+  isPaused = false;
+  gameRunning = true;
+  directionChangedThisTick = false;
+
+  overlay.style.display = 'none';
+  generateFood();
+
+  resetGameLoop();
+}
+
+function resetGameLoop() {
+  if (gameInterval) clearInterval(gameInterval);
+  gameInterval = setInterval(gameLoop, currentIntervalMs);
+}
+
+function gameLoop() {
   update();
   draw();
 }
 
-// ==========================================
-// ATUALIZAÇÃO DA LÓGICA (UPDATE)
-// ==========================================
 function update() {
-  // Aplica a próxima direção para evitar mudanças bruscas no mesmo frame
-  dx = nextDx;
-  dy = nextDy;
+  directionChangedThisTick = false;
+  const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
-  // 1. Calcula a nova posição da cabeça
-  let head = {
-    x: snake[0].x + dx,
-    y: snake[0].y + dy
-  };
-
-  // 2. Lógica das Paredes
-  if (hasWallCollision) {
-    // MODO COM COLISÃO: Bateu na borda -> Game Over
-    if (
-      head.x < 0 ||
-      head.x >= tileCount ||
-      head.y < 0 ||
-      head.y >= tileCount
-    ) {
-      handleGameOver();
+  // Colisão com as paredes
+  if (hasWallCollision){
+  // MODO 1: Morre ao bater na parede
+    if (checkWallCollision(head, GRID_WIDTH, GRID_HEIGHT)){
+      gameOver();
       return;
-    }
-  } else {
-    // MODO SEM COLISÃO: Atravessa a borda e sai do outro lado (Eixo X e Y)
-    if (head.x < 0) {
-      head.x = tileCount - 1; // Esquerda -> Direita
-    } else if (head.x >= tileCount) {
-      head.x = 0;              // Direita -> Esquerda
-    }
-
-    if (head.y < 0) {
-      head.y = tileCount - 1; // Topo -> Base
-    } else if (head.y >= tileCount) {
-      head.y = 0;              // Base -> Topo
-    }
+     }
+    }else {
+    // MODO 2: Atravessa para o outro lado
+    head = wrapAroundWall(head, GRID_WIDTH, GRID_HEIGHT);
   }
 
-  // 3. Colisão com o próprio corpo
+  // Colisão com o próprio corpo
   for (let i = 0; i < snake.length; i++) {
-    if (snake[i].x === head.x && snake[i].y === head.y) {
-      handleGameOver();
+    if (head.x === snake[i].x && head.y === snake[i].y) {
+      gameOver();
       return;
     }
   }
 
-  // Adiciona a nova cabeça
+  playSoundMove();
   snake.unshift(head);
 
-  // 4. Verificação da Comida
+  // Comeu a maçã
   if (head.x === food.x && head.y === food.y) {
+    playEatSound();
     score += 10;
+    applesEaten++;
+
+    // A cada 10 maçãs comidas, aumenta a velocidade
+    if (applesEaten % 10 === 0) {
+      speedLevel++;
+      speedEl.innerText = speedLevel;
+
+      if (currentIntervalMs > 40) {
+        currentIntervalMs -= 8;
+        resetGameLoop();
+      }
+    }
+
+    scoreEl.innerText = score;
+
     if (score > highScore) {
       highScore = score;
+      highScoreEl.innerText = highScore;
       localStorage.setItem('snake_highscore', highScore);
     }
-    updateScoreDisplay();
+
     generateFood();
   } else {
-    snake.pop(); // Remove o último pedaço do rabo se não comeu
+    snake.pop();
   }
 }
 
-// ==========================================
-// RENDERIZAÇÃO NA TELA (DRAW)
-// ==========================================
 function draw() {
-  // Limpa o Canvas
-  ctx.fillStyle = '#0a0a0c';
+  ctx.fillStyle = '#030712';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Desenha a Comida
-  ctx.fillStyle = '#ff4757';
-  ctx.shadowColor = '#ff4757';
+  // Maçã
+  ctx.fillStyle = '#ef4444';
+  ctx.shadowColor = '#ef4444';
   ctx.shadowBlur = 8;
-  ctx.fillRect(food.x * gridSize + 1, food.y * gridSize + 1, gridSize - 2, gridSize - 2);
+  ctx.fillRect(food.x, food.y, gridSize - 2, gridSize - 2);
+  ctx.shadowBlur = 0;
 
-  // Desenha a Cobra
-  ctx.shadowBlur = 0; // Reseta o shadow Blur para o corpo
-  snake.forEach((segment, index) => {
-    // Cabeça verde clara, corpo verde escuro
-    ctx.fillStyle = index === 0 ? '#2ed573' : '#26af5f';
-    ctx.fillRect(
-      segment.x * gridSize + 1,
-      segment.y * gridSize + 1,
-      gridSize - 2,
-      gridSize - 2
-    );
+  // Cobra
+  snake.forEach((part, index) => {
+    ctx.fillStyle = index === 0 ? '#10b981' : '#22c55e';
+    ctx.fillRect(part.x, part.y, gridSize - 2, gridSize - 2);
   });
 }
 
-// ==========================================
-// GERADORES E AUXILIARES
-// ==========================================
 function generateFood() {
-  while (true) {
-    food = {
-      x: Math.floor(Math.random() * tileCount),
-      y: Math.floor(Math.random() * tileCount)
-    };
+  food.x = Math.floor(Math.random() * tileCount) * gridSize;
+  food.y = Math.floor(Math.random() * tileCount) * gridSize;
 
-    // Garante que a comida não apareça dentro da cobra
-    let onSnake = snake.some(segment => segment.x === food.x && segment.y === food.y);
-    if (!onSnake) break;
-  }
-}
-
-function updateScoreDisplay() {
-  const scoreElem = document.getElementById('score');
-  const recordElem = document.getElementById('record');
-  
-  if (scoreElem) scoreElem.textContent = score;
-  if (recordElem) recordElem.textContent = highScore;
-}
-
-function handleGameOver() {
-  isGameOver = true;
-  clearInterval(gameLoopInterval);
-  
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.75)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = '#ff4757';
-  ctx.font = 'bold 22px monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('Fim de Jogo', canvas.width / 2, canvas.height / 2 - 10);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '14px monospace';
-  ctx.fillText(`Pontuação: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
-}
-
-// Alternar entre modo com e sem parede
-function setWallMode(hasCollision) {
-  hasWallCollision = hasCollision;
+  snake.forEach(part => {
+    if (part.x === food.x && part.y === food.y) {
+      generateFood();
+    }
+  });
 }
 
 function togglePause() {
-  isPaused = !isPaused;
-}
-
-// ==========================================
-// CONTROLES (TECLADO E BOTÕES D-PAD)
-// ==========================================
-function changeDirection(dir) {
-  if (dir === 'UP' && dy === 0) { nextDx = 0; nextDy = -1; }
-  if (dir === 'DOWN' && dy === 0) { nextDx = 0; nextDy = 1; }
-  if (dir === 'LEFT' && dx === 0) { nextDx = -1; nextDy = 0; }
-  if (dir === 'RIGHT' && dx === 0) { nextDx = 1; nextDy = 0; }
-}
-
-// Eventos de Teclado
-document.addEventListener('keydown', (e) => {
-  switch (e.key) {
-    case 'ArrowUp': case 'w': case 'W': changeDirection('UP'); break;
-    case 'ArrowDown': case 's': case 'S': changeDirection('DOWN'); break;
-    case 'ArrowLeft': case 'a': case 'A': changeDirection('LEFT'); break;
-    case 'ArrowRight': case 'd': case 'D': changeDirection('RIGHT'); break;
-    case ' ': togglePause(); break;
+  playClickSound();
+  if (isPaused) {
+    resetGameLoop();
+    overlay.style.display = 'none';
+    isPaused = false;
+  } else {
+    clearInterval(gameInterval);
+    overlayTitle.innerText = 'Pausado';
+    overlayTitle.style.color = '#facc15';
+    overlayMsg.innerText = 'Toque na tela ou Espaço para Continuar';
+    overlay.style.display = 'flex';
+    isPaused = true;
   }
-});
+}
 
-// Inicializar quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
-  initGame();
-});
+function gameOver() {
+  clearInterval(gameInterval);
+  gameRunning = false;
+  playGameOverSound();
+
+  overlayTitle.innerText = 'Fim de Jogo';
+  overlayTitle.style.color = '#ef4444';
+  overlayMsg.innerText = `Sua pontuação final foi: ${score}`;
+  
+  if (btnStart) btnStart.innerText = '▶';
+
+  overlay.style.display = 'flex';
+}
