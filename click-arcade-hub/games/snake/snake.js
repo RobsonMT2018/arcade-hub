@@ -37,7 +37,7 @@ const LEVELS = [
     hasWalls: true,
     obstacles: [],
     badAppleChance: 0,
-    nextScoreTarget: 30
+    nextScoreTarget: 200
   },
   {
     id: 2,
@@ -45,7 +45,7 @@ const LEVELS = [
     hasWalls: false,
     obstacles: [],
     badAppleChance: 0,
-    nextScoreTarget: 60
+    nextScoreTarget: 400
   },
   {
     id: 3,
@@ -60,7 +60,7 @@ const LEVELS = [
       { x: 260, y: 160 }, { x: 260, y: 180 }, { x: 260, y: 200 }, { x: 260, y: 220 }
     ],
     badAppleChance: 0,
-    nextScoreTarget: 90
+    nextScoreTarget: 600
   },
   {
     id: 4,
@@ -68,7 +68,7 @@ const LEVELS = [
     hasWalls: true,
     obstacles: [],
     badAppleChance: 0.35,
-    nextScoreTarget: 120
+    nextScoreTarget: 1000
   }
 ];
 
