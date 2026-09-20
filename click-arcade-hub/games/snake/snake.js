@@ -35,11 +35,7 @@ const hasWallCollision = false;
 
 function checkWallCollision(head, gridWidth, gridHeight) {
  
-  if (
-    head.x < 0 || 
-    head.x >= gridWidth || 
-    head.y < 0 || 
-    head.y >= gridHeight
+  if (head.x < 0 || head.x >= gridWidth || head.y < 0 || head.y >= gridHeight
   ) {
     return true; // Colidiu com a parede -> Game Over
   }
