@@ -225,7 +225,7 @@ function drawCloud(cloud) {
   ctx.closePath();
   ctx.fill();
 
-  ctx.fillStyle = 'rgba(255,255,255,0.65)';
+  ctx.fillStyle = 'black';
   ctx.beginPath();
   ctx.ellipse(30, 10, 52, 20, 0, 0, Math.PI * 2);
   ctx.fill();
