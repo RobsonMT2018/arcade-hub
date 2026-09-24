@@ -225,7 +225,7 @@ function drawCloud(cloud) {
   ctx.closePath();
   ctx.fill();
 
-  ctx.fillStyle = 'black';
+
   ctx.beginPath();
   ctx.ellipse(30, 10, 52, 20, 0, 0, Math.PI * 2);
   ctx.fill();
@@ -234,7 +234,7 @@ function drawCloud(cloud) {
 
 function drawBackground() {
   const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  skyGradient.addColorStop(0, '#76d7ff');
+  
   skyGradient.addColorStop(0.55, '#a7e8ff');
   skyGradient.addColorStop(1, '#dff6ff');
   ctx.fillStyle = skyGradient;
