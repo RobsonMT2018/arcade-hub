@@ -16,6 +16,10 @@ const powerupBar = document.getElementById('powerup-bar');
 const powerupName = document.getElementById('powerup-name');
 const powerupProgress = document.getElementById('powerup-progress');
 
+// Carregando a imagem do seu carro customizado
+const playerImg = new Image();
+playerImg.src = 'car.png';
+
 // Configuração das Pistas (3 Faixas)
 const lanes = [110, 200, 290]; // Posições X centrais de cada faixa
 let currentLane = 1; // Começa na faixa do meio
@@ -112,7 +116,7 @@ function updateUI() {
 function updateShopUI() {
   const car = CAR_SKINS[selectedCarIndex];
   carNameEl.textContent = car.name;
-  
+
   if (car.unlocked) {
     carStatusEl.textContent = selectedCarIndex === saveData.selectedSkin ? 'SELECIONADO' : 'ADQUIRIDO';
     carStatusEl.className = 'status-owned';
@@ -166,6 +170,25 @@ function spawnEntities() {
   if (frameCount % Math.max(25, Math.floor(80 - gameSpeed * 3)) === 0) {
     const laneIdx = Math.floor(Math.random() * 3);
     const posX = lanes[laneIdx] - 20;
+
+    // Variações de cores para os veículos obstáculos (Cor Principal e Cor de Acento)
+    const enemySkins = [
+      { main: '#d63031', accent: '#ff7675' }, // Vermelho / Tático
+      { main: '#0984e3', accent: '#74b9ff' }, // Azul / Urbano
+      { main: '#e17055', accent: '#fab1a0' }, // Deserto / Camuflado
+      { main: '#6c5ce7', accent: '#a29bfe' }  // Roxo / Cyber
+    ];
+
+    const skin = enemySkins[Math.floor(Math.random() * enemySkins.length)];
+
+    obstacles.push({
+      x: posX,
+      y: -80,
+      width: 40,
+      height: 70,
+      color: skin.main,
+      accentColor: skin.accent
+    });
 
     // Garante que não nasça um obstáculo em cima de outro item
     const typeRandom = Math.random();
@@ -404,18 +427,28 @@ function draw() {
 
   // 6. Renderiza Obstáculos (Outros Carros)
   obstacles.forEach(obs => {
-    drawCar(obs.x, obs.y, obs.width, obs.height, obs.color, '#111', 0);
+    drawCar(obs.x, obs.y, obs.width, obs.height, obs.color, obs.accentColor, 0);
   });
 
   // 7. Renderiza Jogador
-  const skin = CAR_SKINS[CAR_SKINS.findIndex(s => s.id === saveData.selectedSkin)] || CAR_SKINS[0];
   ctx.save();
+  // Move o contexto para o centro do jogador para aplicar a rotação (inclinação)
   ctx.translate(player.x + player.width / 2, player.y + player.height / 2);
   ctx.rotate(player.tilt);
 
-  drawCar(-player.width / 2, -player.height / 2, player.width, player.height, skin.color, skin.accent, player.tilt);
+  // Desenha a sua imagem car.png
+  // Verifica se a imagem já carregou para evitar erros na tela
+  if (playerImg.complete) {
+    ctx.drawImage(
+      playerImg,
+      -player.width / 2,
+      -player.height / 2,
+      player.width,
+      player.height
+    );
+  }
 
-  // Aura do Escudo/Turbo
+  // Aura do Escudo/Turbo (Mantido do código original)
   if (player.shieldActive) {
     ctx.strokeStyle = '#00f3ff';
     ctx.lineWidth = 3;
@@ -434,35 +467,69 @@ function draw() {
 }
 
 // Desenhista Genérico de Carro
+// Função para desenhar carros no estilo Pixel Art semelhante ao do jogador
 function drawCar(x, y, w, h, color, accentColor, tilt) {
-  // Sombra
+  // Ajuste do tamanho do pixel baseado na largura base de 40px
+  const p = w / 10;
+
+  ctx.save();
+  ctx.translate(x + w / 2, y + h / 2);
+  ctx.rotate(tilt || 0);
+
+  // 1. Sombra
   ctx.fillStyle = 'rgba(0,0,0,0.3)';
-  ctx.fillRect(x + 4, y + 4, w, h);
+  ctx.fillRect(-w / 2 + p, -h / 2 + p, w, h);
 
-  // Chassis
+  // 2. Contorno Pixelado (Outter Border)
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(-w / 2, -h / 2, w, h);
+
+  // 3. Esteiras / Rodas Pixeladas (Nas laterais)
+  ctx.fillStyle = '#2d3436';
+  // Esteira Esquerda
+  ctx.fillRect(-w / 2 + p, -h / 2 + p, p * 2, h - p * 2);
+  // Esteira Direita
+  ctx.fillRect(w / 2 - p * 3, -h / 2 + p, p * 2, h - p * 2);
+
+  // Detalhes dos gomos da esteira
+  ctx.fillStyle = '#636e72';
+  for (let i = -h / 2 + p * 2; i < h / 2 - p * 2; i += p * 2) {
+    ctx.fillRect(-w / 2 + p, i, p * 2, p);
+    ctx.fillRect(w / 2 - p * 3, i, p * 2, p);
+  }
+
+  // 4. Corpo Principal do Veículo
   ctx.fillStyle = color;
-  ctx.fillRect(x, y, w, h);
+  ctx.fillRect(-w / 2 + p * 2, -h / 2 + p * 2, w - p * 4, h - p * 4);
 
-  // Detalhes / Listras
+  // 5. Camada Secundária / Cúpula Superior
   ctx.fillStyle = accentColor;
-  ctx.fillRect(x + w * 0.3, y, w * 0.4, h);
+  ctx.fillRect(-w / 2 + p * 3, -h / 2 + p * 4, w - p * 6, h - p * 8);
 
-  // Vidros
-  ctx.fillStyle = '#111';
-  ctx.fillRect(x + 5, y + 15, w - 10, 14); // Parabrisa
-  ctx.fillRect(x + 6, y + h - 22, w - 12, 10); // Traseiro
+  // 6. Vidro / Escotilha Central (Estilo Pixel Art)
+  ctx.fillStyle = '#2d3436';
+  ctx.fillRect(-p, -p * 2, p * 2, p * 3);
+  ctx.fillStyle = '#00cec9'; // Brilho do vidro
+  ctx.fillRect(-p + 1, -p * 2 + 1, p, p);
 
-  // Faróis
-  ctx.fillStyle = '#fff';
-  ctx.fillRect(x + 2, y + 2, 8, 4);
-  ctx.fillRect(x + w - 10, y + 2, 8, 4);
+  // 7. Parachoques / Detalhes Amarelos Dianteiros
+  ctx.fillStyle = '#f1c40f';
+  ctx.fillRect(-w / 2 + p * 3, -h / 2 + p * 2, p * 2, p);
+  ctx.fillRect(w / 2 - p * 5, -h / 2 + p * 2, p * 2, p);
 
-  // Lanternas
-  ctx.fillStyle = '#e74c3c';
-  ctx.fillRect(x + 2, y + h - 4, 8, 3);
-  ctx.fillRect(x + w - 10, y + h - 4, 8, 3);
+  // 8. Faróis / Lanternas
+  // Faróis Dianteiros (Brancos)
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(-w / 2 + p * 2, -h / 2 + p, p * 2, p);
+  ctx.fillRect(w / 2 - p * 4, -h / 2 + p, p * 2, p);
+
+  // Lanternas Traseiras (Vermelhas)
+  ctx.fillStyle = '#ff7675';
+  ctx.fillRect(-w / 2 + p * 3, h / 2 - p * 2, p * 2, p);
+  ctx.fillRect(w / 2 - p * 5, h / 2 - p * 2, p * 2, p);
+
+  ctx.restore();
 }
-
 // Controle do Loop e Estados
 function triggerGameOver() {
   isGameOver = true;
@@ -473,7 +540,7 @@ function triggerGameOver() {
 
   document.getElementById('final-score').textContent = score;
   document.getElementById('final-coins').textContent = coinsCollected;
-  
+
   const recordTag = document.getElementById('new-record-tag');
   if (isNewRecord) recordTag.classList.remove('hidden');
   else recordTag.classList.add('hidden');
@@ -504,6 +571,7 @@ function resetGame() {
   gameOverScreen.classList.add('hidden');
   menuScreen.classList.add('hidden');
   powerupBar.classList.add('hidden');
+
 }
 
 function gameLoop() {
