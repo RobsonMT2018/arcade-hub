@@ -24,6 +24,88 @@ const powerupProgress = document.getElementById('powerup-progress');
 const btnLeft = document.getElementById('btn-left');
 const btnRight = document.getElementById('btn-right');
 
+
+// Captura dos novos botões do D-Pad
+const btnUp = document.getElementById('btn-up');
+const btnDown = document.getElementById('btn-down');
+
+// Estado das Teclas e Botões Ativos
+const inputState = {
+  up: false,
+  down: false,
+  left: false,
+  right: false
+};
+
+// Limites verticais da pista para o jogador
+const minY = 100; // Limite superior da pista
+const maxY = 550; // Limite inferior da pista
+const verticalSpeed = 4; // Velocidade de movimentação para frente/trás
+
+// Events do Teclado (Setas / WASD)
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') inputState.left = true;
+  if (e.key === 'ArrowRight' || e.key === 'd') inputState.right = true;
+  if (e.key === 'ArrowUp' || e.key === 'w') inputState.up = true;
+  if (e.key === 'ArrowDown' || e.key === 's') inputState.down = true;
+});
+
+window.addEventListener('keyup', (e) => {
+  if (e.key === 'ArrowLeft' || e.key === 'a') inputState.left = false;
+  if (e.key === 'ArrowRight' || e.key === 'd') inputState.right = false;
+  if (e.key === 'ArrowUp' || e.key === 'w') inputState.up = false;
+  if (e.key === 'ArrowDown' || e.key === 's') inputState.down = false;
+});
+
+// Eventos Touch para o D-Pad
+function bindTouchButton(btn, direction) {
+  btn.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    inputState[direction] = true;
+  });
+  btn.addEventListener('pointerup', (e) => {
+    e.preventDefault();
+    inputState[direction] = false;
+  });
+  btn.addEventListener('pointerleave', (e) => {
+    e.preventDefault();
+    inputState[direction] = false;
+  });
+}
+
+bindTouchButton(btnLeft, 'left');
+bindTouchButton(btnRight, 'right');
+bindTouchButton(btnUp, 'up');
+bindTouchButton(btnDown, 'down');
+
+// Função de Atualização de Movimento no Loop (Adicionar no início da função update())
+function updatePlayerMovement() {
+  if (!isPlaying || isGameOver) return;
+
+  // Movimento Horizontal por Troca de Faixa Suave
+  if (inputState.left && currentLane > 0) {
+    currentLane--;
+    player.targetX = lanes[currentLane] - player.width / 2;
+    player.tilt = -0.15;
+    inputState.left = false; // Registra o toque/clique por impulso
+  }
+  if (inputState.right && currentLane < lanes.length - 1) {
+    currentLane++;
+    player.targetX = lanes[currentLane] - player.width / 2;
+    player.tilt = 0.15;
+    inputState.right = false; // Registra o toque/clique por impulso
+  }
+
+  // Movimento Vertical Continuo (Acelerar / Ré)
+  if (inputState.up && player.y > minY) {
+    player.y -= verticalSpeed;
+  }
+  if (inputState.down && player.y < maxY) {
+    player.y += verticalSpeed;
+  }
+}
+
+
 // Configuração das Pistas (3 Faixas)
 const lanes = [110, 200, 290];
 let currentLane = 1;
