@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Turbo Dash 2D - Arcade Racing</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -33,10 +33,16 @@
       <div id="powerup-progress"></div>
     </div>
 
+    <!-- Controles para Celular (Touch) -->
+    <div id="touch-controls">
+      <button id="btn-left" class="touch-btn">◀</button>
+      <button id="btn-right" class="touch-btn">▶</button>
+    </div>
+
     <!-- Tela Inicial / Loja -->
     <div id="menu-screen">
       <h1 class="title">TURBO <span>DASH</span></h1>
-      <p class="subtitle">Use A/D ou Setas para mudar de faixa</p>
+      <p class="subtitle">Use A/D, Setas ou Toque na tela para jogar</p>
       
       <div class="shop-container">
         <h3>GARAGEM</h3>
