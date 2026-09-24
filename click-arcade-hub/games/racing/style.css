@@ -10,7 +10,7 @@
 body {
   background-color: #0b0c10;
   color: #fff;
-  font-family: 'Montserrat', 'Segoe UI', sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,18 +25,20 @@ body {
   border-radius: 12px;
   overflow: hidden;
   background: #111;
+  width: 400px;
+  height: 650px;
   max-width: 100vw;
   max-height: 100vh;
 }
 
-canvas {
+canvas#gameCanvas {
   display: block;
-  max-width: 100vw;
-  max-height: 100vh;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
 }
 
-/* UI / HUD */
+/* HUD Superior */
 #ui {
   position: absolute;
   top: 15px;
@@ -49,7 +51,7 @@ canvas {
 }
 
 .hud-box {
-  background: rgba(15, 15, 26, 0.75);
+  background: rgba(15, 15, 26, 0.8);
   backdrop-filter: blur(4px);
   padding: 6px 12px;
   border-radius: 6px;
@@ -74,50 +76,50 @@ canvas {
 /* Barra de Power-up */
 #powerup-bar {
   position: absolute;
-  bottom: 85px;
+  top: 75px;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
-  background: rgba(0, 0, 0, 0.8);
+  width: 180px;
+  background: rgba(0, 0, 0, 0.85);
   border: 1px solid #45f3ff;
   border-radius: 20px;
   padding: 4px;
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: bold;
   z-index: 5;
 }
 
 #powerup-progress {
-  height: 6px;
+  height: 5px;
   background: #45f3ff;
   border-radius: 10px;
   width: 100%;
   transition: width 0.1s linear;
 }
 
-/* Botões Touch para Celular */
+/* Controles Touch na Parte Inferior */
 #touch-controls {
   position: absolute;
-  bottom: 15px;
+  bottom: 25px;
   left: 0;
   right: 0;
   display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
+  justify-content: space-around;
+  padding: 0 40px;
   pointer-events: none;
   z-index: 10;
 }
 
 .touch-btn {
   pointer-events: auto;
-  width: 70px;
-  height: 70px;
+  width: 65px;
+  height: 65px;
   border-radius: 50%;
-  background: rgba(102, 252, 241, 0.25);
+  background: rgba(102, 252, 241, 0.2);
   border: 2px solid #66fcf1;
   color: #fff;
-  font-size: 28px;
+  font-size: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,16 +134,16 @@ canvas {
   transform: scale(0.92);
 }
 
-/* Telas (Menu & Game Over) */
+/* Telas de Overlay (Menu & Game Over) */
 #menu-screen, #game-over-screen {
   position: absolute;
   inset: 0;
-  background: rgba(11, 12, 16, 0.92);
+  background: rgba(11, 12, 16, 0.94);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 15px;
   padding: 20px;
   text-align: center;
   z-index: 20;
@@ -152,7 +154,7 @@ canvas {
 }
 
 .title {
-  font-size: 42px;
+  font-size: 38px;
   font-weight: 900;
   letter-spacing: 2px;
   color: #fff;
@@ -164,23 +166,24 @@ canvas {
 }
 
 .subtitle {
-  font-size: 12px;
+  font-size: 11px;
   color: #c5c6c7;
 }
 
 /* Garagem / Loja */
 .shop-container {
-  background: rgba(31, 40, 51, 0.6);
+  background: rgba(31, 40, 51, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 15px;
-  width: 85%;
+  width: 90%;
 }
 
 .shop-container h3 {
-  font-size: 14px;
+  font-size: 13px;
   color: #66fcf1;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
 }
 
 .car-selector {
@@ -190,39 +193,53 @@ canvas {
   margin-bottom: 10px;
 }
 
-#car-preview {
+#car-preview-box {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  gap: 8px;
+}
+
+#previewCanvas {
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  padding: 5px;
+}
+
+#car-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 #car-name {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #car-status {
   font-size: 11px;
+  font-weight: bold;
 }
 
 .status-owned { color: #2ecc71; }
 .status-locked { color: #e74c3c; }
 
-/* Botões da UI */
 .nav-btn {
   background: #1f2833;
   border: 1px solid #45f3ff;
   color: #fff;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   cursor: pointer;
   font-weight: bold;
+  font-size: 16px;
 }
 
 .action-btn {
-  padding: 12px 30px;
-  font-size: 16px;
+  padding: 12px 25px;
+  font-size: 15px;
   font-weight: 800;
   color: #0b0c10;
   background: #66fcf1;
@@ -238,81 +255,32 @@ canvas {
   background: #45f3ff;
 }
 
+.buy-action {
+  background: #f1c40f;
+  box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+  margin-top: 5px;
+}
+
 .play-btn {
-  width: 85%;
-  font-size: 20px;
+  width: 90%;
+  font-size: 18px;
 }
 
 .danger-text {
   color: #ff3838;
-  font-size: 40px;
+  font-size: 36px;
   text-shadow: 0 0 15px rgba(255, 56, 56, 0.5);
 }
 
 .result-box {
   background: rgba(255,255,255,0.05);
-  padding: 15px 30px;
+  padding: 15px 25px;
   border-radius: 8px;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .new-record {
   color: #f1c40f;
   margin-top: 8px;
   font-weight: bold;
-  animation: pulse 1s infinite alternate;
-}
-
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
-}
-
-
-/* Controles D-Pad para Celular */
-#touch-controls {
-  position: absolute;
-  bottom: 15px;
-  right: 15px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.dpad {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-}
-
-.dpad-row {
-  display: flex;
-  gap: 35px;
-}
-
-.touch-btn {
-  pointer-events: auto;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: rgba(102, 252, 241, 0.25);
-  border: 2px solid #66fcf1;
-  color: #fff;
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
-  cursor: pointer;
-  outline: none;
-  touch-action: manipulation;
-  transition: transform 0.1s, background 0.1s;
-}
-
-.touch-btn:active {
-  background: rgba(102, 252, 241, 0.65);
-  transform: scale(0.92);
 }
