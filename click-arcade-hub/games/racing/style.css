@@ -3,6 +3,8 @@
   margin: 0;
   padding: 0;
   user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
 }
 
 body {
@@ -23,10 +25,15 @@ body {
   border-radius: 12px;
   overflow: hidden;
   background: #111;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 canvas {
   display: block;
+  max-width: 100vw;
+  max-height: 100vh;
+  object-fit: contain;
 }
 
 /* UI / HUD */
@@ -38,6 +45,7 @@ canvas {
   display: flex;
   justify-content: space-between;
   pointer-events: none;
+  z-index: 5;
 }
 
 .hud-box {
@@ -66,7 +74,7 @@ canvas {
 /* Barra de Power-up */
 #powerup-bar {
   position: absolute;
-  bottom: 20px;
+  bottom: 85px;
   left: 50%;
   transform: translateX(-50%);
   width: 200px;
@@ -77,6 +85,7 @@ canvas {
   text-align: center;
   font-size: 11px;
   font-weight: bold;
+  z-index: 5;
 }
 
 #powerup-progress {
@@ -85,6 +94,42 @@ canvas {
   border-radius: 10px;
   width: 100%;
   transition: width 0.1s linear;
+}
+
+/* Botões Touch para Celular */
+#touch-controls {
+  position: absolute;
+  bottom: 15px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.touch-btn {
+  pointer-events: auto;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(102, 252, 241, 0.25);
+  border: 2px solid #66fcf1;
+  color: #fff;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.1s, background 0.1s;
+}
+
+.touch-btn:active {
+  background: rgba(102, 252, 241, 0.6);
+  transform: scale(0.92);
 }
 
 /* Telas (Menu & Game Over) */
@@ -99,6 +144,7 @@ canvas {
   gap: 20px;
   padding: 20px;
   text-align: center;
+  z-index: 20;
 }
 
 .hidden {
@@ -162,13 +208,13 @@ canvas {
 .status-owned { color: #2ecc71; }
 .status-locked { color: #e74c3c; }
 
-/* Botões */
+/* Botões da UI */
 .nav-btn {
   background: #1f2833;
   border: 1px solid #45f3ff;
   color: #fff;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   cursor: pointer;
   font-weight: bold;
