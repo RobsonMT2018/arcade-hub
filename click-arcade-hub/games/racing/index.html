@@ -3,23 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2D Racing Game - Parallax</title>
+  <title>Turbo Dash 2D - Arcade Racing</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
   <div id="game-container">
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <canvas id="gameCanvas" width="400" height="650"></canvas>
     
+    <!-- Hud Superior -->
     <div id="ui">
-      <div>Pontos: <span id="score">0</span></div>
-      <div>Velocidade: <span id="speed">0</span> km/h</div>
+      <div class="hud-box">
+        <span class="hud-label">PONTOS</span>
+        <span id="score">0</span>
+      </div>
+      <div class="hud-box">
+        <span class="hud-label">RECORDE</span>
+        <span id="high-score">0</span>
+      </div>
+      <div class="hud-box coin-hud">
+        <span class="hud-label">MOEDAS</span>
+        <span id="coins">0</span>
+      </div>
     </div>
 
+    <!-- Indicador de Power-up Ativo -->
+    <div id="powerup-bar" class="hidden">
+      <span id="powerup-name">TURBO</span>
+      <div id="powerup-progress"></div>
+    </div>
+
+    <!-- Tela Inicial / Loja -->
+    <div id="menu-screen">
+      <h1 class="title">TURBO <span>DASH</span></h1>
+      <p class="subtitle">Use A/D ou Setas para mudar de faixa</p>
+      
+      <div class="shop-container">
+        <h3>GARAGEM</h3>
+        <div class="car-selector">
+          <button id="prev-car" class="nav-btn">&lt;</button>
+          <div id="car-preview">
+            <span id="car-name">Red Racer</span>
+            <span id="car-status" class="status-owned">SELECIONADO</span>
+          </div>
+          <button id="next-car" class="nav-btn">&gt;</button>
+        </div>
+        <button id="buy-btn" class="action-btn hidden">COMPRAR (100 🪙)</button>
+      </div>
+
+      <button id="start-btn" class="action-btn play-btn">JOGAR</button>
+    </div>
+
+    <!-- Tela Game Over -->
     <div id="game-over-screen" class="hidden">
-      <h1>GAME OVER</h1>
-      <p>Pontuação final: <span id="final-score">0</span></p>
-      <button id="restart-btn">Jogar Novamente</button>
+      <h1 class="danger-text">BATIDA!</h1>
+      <div class="result-box">
+        <p>Pontuação: <strong id="final-score">0</strong></p>
+        <p>Moedas Coletadas: <strong id="final-coins">0</strong></p>
+        <p class="new-record hidden" id="new-record-tag">🏆 NOVO RECORDE!</p>
+      </div>
+      <button id="restart-btn" class="action-btn">CORRER NOVAMENTE</button>
     </div>
   </div>
 

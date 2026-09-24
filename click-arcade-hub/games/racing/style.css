@@ -2,14 +2,14 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 body {
-  background-color: #1a1a24;
+  background-color: #0b0c10;
   color: #fff;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Montserrat', 'Segoe UI', sans-serif;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
@@ -18,63 +18,206 @@ body {
 
 #game-container {
   position: relative;
-  border: 4px solid #fff;
-  box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
-  border-radius: 8px;
+  border: 3px solid #1f2833;
+  box-shadow: 0 0 35px rgba(0, 238, 255, 0.25);
+  border-radius: 12px;
   overflow: hidden;
+  background: #111;
 }
 
 canvas {
   display: block;
-  background: #2c3e50;
 }
 
+/* UI / HUD */
 #ui {
   position: absolute;
   top: 15px;
   left: 15px;
-  font-size: 18px;
-  font-weight: bold;
-  text-shadow: 2px 2px 4px #000;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
   pointer-events: none;
 }
 
-#game-over-screen {
+.hud-box {
+  background: rgba(15, 15, 26, 0.75);
+  backdrop-filter: blur(4px);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.hud-label {
+  font-size: 9px;
+  color: #66fcf1;
+  letter-spacing: 1px;
+}
+
+.coin-hud {
+  color: #f1c40f;
+}
+
+/* Barra de Power-up */
+#powerup-bar {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #45f3ff;
+  border-radius: 20px;
+  padding: 4px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+#powerup-progress {
+  height: 6px;
+  background: #45f3ff;
+  border-radius: 10px;
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
+  transition: width 0.1s linear;
+}
+
+/* Telas (Menu & Game Over) */
+#menu-screen, #game-over-screen {
+  position: absolute;
+  inset: 0;
+  background: rgba(11, 12, 16, 0.92);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
+  padding: 20px;
+  text-align: center;
 }
 
-#game-over-screen.hidden {
-  display: none;
+.hidden {
+  display: none !important;
 }
 
-#game-over-screen h1 {
-  color: #ff4757;
-  font-size: 36px;
-}
-
-#restart-btn {
-  padding: 10px 24px;
-  font-size: 18px;
-  font-weight: bold;
+.title {
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 2px;
   color: #fff;
-  background: #2ed573;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
 }
 
-#restart-btn:hover {
-  background: #26af5f;
+.title span {
+  color: #45f3ff;
+  text-shadow: 0 0 10px #45f3ff;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #c5c6c7;
+}
+
+/* Garagem / Loja */
+.shop-container {
+  background: rgba(31, 40, 51, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  width: 85%;
+}
+
+.shop-container h3 {
+  font-size: 14px;
+  color: #66fcf1;
+  margin-bottom: 10px;
+}
+
+.car-selector {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+#car-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+#car-name {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+#car-status {
+  font-size: 11px;
+}
+
+.status-owned { color: #2ecc71; }
+.status-locked { color: #e74c3c; }
+
+/* Botões */
+.nav-btn {
+  background: #1f2833;
+  border: 1px solid #45f3ff;
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.action-btn {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #0b0c10;
+  background: #66fcf1;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(102, 252, 241, 0.4);
+  transition: all 0.2s;
+}
+
+.action-btn:hover {
   transform: scale(1.05);
+  background: #45f3ff;
+}
+
+.play-btn {
+  width: 85%;
+  font-size: 20px;
+}
+
+.danger-text {
+  color: #ff3838;
+  font-size: 40px;
+  text-shadow: 0 0 15px rgba(255, 56, 56, 0.5);
+}
+
+.result-box {
+  background: rgba(255,255,255,0.05);
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.new-record {
+  color: #f1c40f;
+  margin-top: 8px;
+  font-weight: bold;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.08); }
 }
