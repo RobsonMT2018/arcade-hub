@@ -267,3 +267,52 @@ canvas {
   from { transform: scale(1); }
   to { transform: scale(1.08); }
 }
+
+
+/* Controles D-Pad para Celular */
+#touch-controls {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 35px;
+}
+
+.touch-btn {
+  pointer-events: auto;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(102, 252, 241, 0.25);
+  border: 2px solid #66fcf1;
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  cursor: pointer;
+  outline: none;
+  touch-action: manipulation;
+  transition: transform 0.1s, background 0.1s;
+}
+
+.touch-btn:active {
+  background: rgba(102, 252, 241, 0.65);
+  transform: scale(0.92);
+}
